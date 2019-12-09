@@ -1,0 +1,540 @@
+---
+output:
+  bookdown::pdf_document2
+bibliography: ../div/bibliography.bib
+csl: ../div/refstyles.csl
+---
+
+```{r setup, include=FALSE, message=FALSE}
+# Libraries
+library(tidyverse)
+library(ggthemes)
+library(Rmisc)
+library(knitr)
+
+# Knitr settings
+knitr::opts_chunk$set(
+  echo = FALSE, 
+  fig.width = 8, 
+  fig.asp = 0.4, 
+  warning = FALSE, message = FALSE, error = FALSE)
+
+# Plot settings
+theme_set(
+  theme_clean() +
+    theme(
+      legend.title = element_blank(), 
+      legend.position = "none", 
+      legend.background = element_rect(colour = "white"))
+)
+```
+
+
+# Methods
+
+## Plant and moss data
+- BDM beschreiben
+- Auswahl der Daten beschreiben:
+  - Nur Sites mit mindestens 3 Moos und Pflanzenarten
+- Temperaturkennzahlen beschreiben
+
+
+```{r}
+# Read data
+surveys <- read_csv("Data-raw/surveys.csv") 
+```
+
+
+## Statistical methods
+
+```{r prepare_site_data, results=FALSE}
+# Function to get temporal trend
+get_trend <- function(mes, year) {
+  res <- NA
+  try({
+    dd <- tibble(y = mes, yr = (year -2010)/10) 
+    mod <- lm(y ~ yr, data = dd)
+    res <- coef(mod)[2]
+  })
+  res
+}
+
+# Calculate averages and temporal trends per site
+dat <- surveys %>% 
+  group_by(aID_STAO) %>% 
+  dplyr::summarise(
+    elevation = mean(elevation),
+    HS = first(HS),
+    land_use = first(land_use),
+    SR_pl_mean = mean(AZ_pl, na.rm = TRUE),
+    SR_pl_trend = get_trend(AZ_pl, year),
+    T_pl_mean = mean(T_pl, na.rm = TRUE),
+    T_pl_trend = get_trend(T_pl, year),
+    SR_mo_mean = mean(AZ_mo, na.rm = TRUE),
+    SR_mo_trend = get_trend(AZ_mo, year),
+    T_mo_mean = mean(T_mo, na.rm = TRUE),
+    T_mo_trend = get_trend(T_mo, year)
+  ) 
+
+```
+
+```{r}
+d <- read_csv("Data-raw/summarystat.csv")
+kable(d, caption = "Summary statistics of BDM moss and plant surveys.", booktabs = T)
+```
+
+
+# Results
+- Except for forests at lower elevations, the average T value of mosses was slightly larger than for plants (Fig. \@ref(fig:T-state-elevation)). 
+- Termophilisation tends to be larger in mosses than in plants, particularly in the open habitats in the subalpine and alpine region (Fig. \@ref(fig:T-trend-HS)). 
+
+```{r T-state-elevation, fig.cap = "Mean temperature values along the elevational gradient for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot. Given are mean temperature values of recorded plants (green) and mosses (orange)."}
+# Plot: elevational gradient in T-values for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
+  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1,5) + 
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean temperature value",
+    title = "(A) Forests"
+  )
+
+# Plot: elevational gradient in T-values for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
+  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1,5) + 
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean temperature value",
+    title = "(B) Grassland"
+  )
+
+# Plot: elevational gradient in T-values for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
+  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1,5) + 
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean temperature value",
+    title = "(C) Unused"
+  )
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+
+```{r SR-state-elevation, fig.cap = "Species richness along the elevational gradient for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot. Given are the number of recorded plant (green) and moss (orange) species per plot."}
+# Plot: elevational gradient in species richness for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(!is.na(SR_pl_mean) & !is.na(SR_mo_mean)) %>% 
+  mutate(plants = SR_pl_mean, moss = SR_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(0, 80) +
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean species richness",
+    title = "(A) Forests"
+  )
+
+# Plot: elevational gradient in species richness for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  filter(!is.na(SR_pl_mean) & !is.na(SR_mo_mean)) %>% 
+  mutate(plants = SR_pl_mean, moss = SR_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(0, 80) +
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean species richness",
+    title = "(B) Grassland"
+  )
+
+# Plot: elevational gradient in species richness for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(!is.na(SR_pl_mean) & !is.na(SR_mo_mean)) %>% 
+  mutate(plants = SR_pl_mean, moss = SR_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(0, 80) +
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean species richness",
+    title = "(C) Unused"
+  )
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+
+
+```{r T-trend-HS, fig.cap = "Termophilisation between 2001 and 2018 of mosses (orange) and plants (green) for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot."}
+
+dat$HS[dat$HS == "subalpine"] <- "sub-\nalpine"
+
+# Plot: temporal change across HS for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(HS != "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(T_pl_trend, na.rm = TRUE),
+    lo = t.test(T_pl_trend)$conf.int[1],
+    up = t.test(T_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "forest") %>% 
+      filter(HS != "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(T_mo_trend, na.rm = TRUE),
+        lo = t.test(T_mo_trend)$conf.int[1],
+        up = t.test(T_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(-0.22, 0.22) + 
+  labs(
+    x = "",
+    y = "Thermophilisation\n (temporal trend in T values per decade)",
+    title = "(A) Forests"
+  )
+
+# Plot: temporal change across HS for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(T_pl_trend, na.rm = TRUE),
+    lo = t.test(T_pl_trend)$conf.int[1],
+    up = t.test(T_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "grassland") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(T_mo_trend, na.rm = TRUE),
+        lo = t.test(T_mo_trend)$conf.int[1],
+        up = t.test(T_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(-0.22, 0.22) + 
+  labs(
+    x = "",
+    y = "Thermophilisation\n (temporal trend in T values per decade)",
+    title = "(B) Grassland"
+  )
+
+# Plot: temporal change across HS for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(T_pl_trend, na.rm = TRUE),
+    lo = t.test(T_pl_trend)$conf.int[1],
+    up = t.test(T_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "unused") %>% 
+      filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(T_mo_trend, na.rm = TRUE),
+        lo = t.test(T_mo_trend)$conf.int[1],
+        up = t.test(T_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(-0.22, 0.22) + 
+  labs(
+    x = "",
+    y = "Thermophilisation\n (temporal trend in T values per decade)",
+    title = "(C) Unused"
+  )
+
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+```{r SR-trend-HS, fig.cap = "Temporal change in species richness between 2001 and 2018 of mosses (orange) and plants (green) for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot."}
+
+dat$HS[dat$HS == "subalpine"] <- "sub-\nalpine"
+
+# Plot: temporal change across HS for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(HS != "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(SR_pl_trend, na.rm = TRUE),
+    lo = t.test(SR_pl_trend)$conf.int[1],
+    up = t.test(SR_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "forest") %>% 
+      filter(HS != "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(SR_mo_trend, na.rm = TRUE),
+        lo = t.test(SR_mo_trend)$conf.int[1],
+        up = t.test(SR_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  # ylim(-0.22, 0.22) + 
+  labs(
+    x = "",
+    y = "Change in species richness\n (change in number of species per decade)",
+    title = "(A) Forests"
+  )
+
+# Plot: temporal change across HS for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(SR_pl_trend, na.rm = TRUE),
+    lo = t.test(SR_pl_trend)$conf.int[1],
+    up = t.test(SR_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "grassland") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(SR_mo_trend, na.rm = TRUE),
+        lo = t.test(SR_mo_trend)$conf.int[1],
+        up = t.test(SR_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  # ylim(-0.22, 0.22) + 
+  labs(
+    x = "",
+    y = "Change in species richness\n (change in number of species per decade)",
+    title = "(B) Grassland"
+  )
+
+# Plot: temporal change across HS for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(SR_pl_trend, na.rm = TRUE),
+    lo = t.test(SR_pl_trend)$conf.int[1],
+    up = t.test(SR_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "unused") %>% 
+      filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(SR_mo_trend, na.rm = TRUE),
+        lo = t.test(SR_mo_trend)$conf.int[1],
+        up = t.test(SR_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  # ylim(-0.22, 0.22) + 
+  labs(
+    x = "",
+    y = "Change in species richness\n (change in number of species per decade)",
+    title = "(C) Unused"
+  )
+
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+
+```{r}
+d <- dat %>% 
+  mutate(
+    Diff = T_mo_trend - T_pl_trend,
+    Ele = (elevation - 1000) / 200)
+lm(Diff ~ 1, data = d) %>% summary
+```
+
+```{r}
+dat$HS[dat$HS == "subalpine"] <- "sub-\nalpine"
+
+# Plot: temporal change across HS for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(HS != "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(T_pl_mean, na.rm = TRUE),
+    lo = t.test(T_pl_mean)$conf.int[1],
+    up = t.test(T_pl_mean)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "forest") %>% 
+      filter(HS != "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(T_mo_mean, na.rm = TRUE),
+        lo = t.test(T_mo_mean)$conf.int[1],
+        up = t.test(T_mo_mean)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1.4, 3.6) +
+  labs(
+    x = "",
+    y = "Thermophilisation\n (temporal trend in T values per decade)",
+    title = "(A) Forests"
+  )
+
+# Plot: temporal change across HS for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(T_pl_mean, na.rm = TRUE),
+    lo = t.test(T_pl_mean)$conf.int[1],
+    up = t.test(T_pl_mean)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "grassland") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(T_mo_mean, na.rm = TRUE),
+        lo = t.test(T_mo_mean)$conf.int[1],
+        up = t.test(T_mo_mean)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1.4, 3.6) +
+  labs(
+    x = "",
+    y = "Thermophilisation\n (temporal trend in T values per decade)",
+    title = "(B) Grassland"
+  )
+
+# Plot: temporal change across HS for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(T_pl_mean, na.rm = TRUE),
+    lo = t.test(T_pl_mean)$conf.int[1],
+    up = t.test(T_pl_mean)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "unused") %>% 
+      filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(T_mo_mean, na.rm = TRUE),
+        lo = t.test(T_mo_mean)$conf.int[1],
+        up = t.test(T_mo_mean)$conf.int[2],
+        gr = "moss")) %>% 
+  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1.4, 3.6) +
+  labs(
+    x = "",
+    y = "Thermophilisation\n (temporal trend in T values per decade)",
+    title = "(C) Unused"
+  )
+
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+# References

@@ -10,8 +10,13 @@ library(tidyverse)
 db <- src_sqlite(path = "DB/DB_BDM_2019_08_18.db", create = FALSE)
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Export data from DB ----
+# Export survey data from DB ----
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# One line in "dat" contains a survey (each plot is surveyed once every five
+# years). Surveys are included only if plant and moss surveys were considered
+# vallid with sufficient data quality.
+
 dat <- 
   
   # Select surveys
@@ -22,8 +27,7 @@ dat <-
   transmute(
     aID_KD = aID_KD, 
     aID_STAO = aID_STAO, 
-    year_pl = yearPl, 
-    year_mo = yearMoos, 
+    year = yearPl,
     land_use = HN) %>% 
   
   # Add site data:
@@ -42,8 +46,7 @@ dat <-
       group_by(aID_KD) %>% 
       dplyr::summarise(
         AZ_pl = n(),
-        T_pl = mean(T, na.rm = TRUE),
-        N_pl = mean(N, na.rm = TRUE)
+        T_pl = mean(T, na.rm = TRUE) %>% round(2)
       )) %>% 
   
   # Add moss data:
@@ -53,8 +56,8 @@ dat <-
       group_by(aID_KD) %>% 
       dplyr::summarise(
         AZ_mo = n(),
-        T_mo = mean(T, na.rm = TRUE),
-        N_mo = mean(N, na.rm = TRUE))) %>% 
+        T_mo = mean(T, na.rm = TRUE) %>% round(2)
+      )) %>% 
   as_tibble() %>% 
   replace_na(list(AZ_pl = 0, AZ_mo = 0)) 
 
@@ -64,16 +67,92 @@ dat$land_use[dat$land_use == "Alpweiden"] <- "grassland"
 dat$land_use[dat$land_use == "Wiesen, Weiden"] <- "grassland"
 dat$land_use[dat$land_use == "Wald"] <- "forest"
 
+# Rename HS types
+dat$HS[dat$HS == "kollin"] <- "colline"
+dat$HS[dat$HS == "montan"] <- "montane"
+dat$HS[dat$HS == "subalpin"] <- "subalpine"
+dat$HS[dat$HS == "alpin"] <- "alpine"
+
+# Remove 1 outlier (Plot with 1 cryophilous bryophyte species at 358 asl, in the
+# floodplain of the Maggia river, the moss presumbably has been floated from
+# further above)
+dat <- dat[dat$aID_KD!=3090399990,]
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Export plant and moss data from DB ----
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Mosses
+moss <- 
+  tbl(db, "Moos") %>% 
+  left_join(tbl(db, "ARTEN") %>% select(aID_SP, Gattung, Art)) %>%      
+  left_join(tbl(db, "Traits_Moos")) %>% 
+  filter(!is.na(aID_SP)) %>% 
+  as_tibble() %>% 
+  filter(!is.na(match(aID_KD, dat$aID_KD))) %>% 
+  transmute(
+    aID_KD = aID_KD,
+    aID_SP = aID_SP,
+    species = paste(Gattung, Art)
+  ) %>% 
+  arrange(aID_KD, aID_SP)
+
+# plants
+plants <- 
+  tbl(db, "PL") %>% 
+  left_join(tbl(db, "ARTEN") %>% select(aID_SP, Gattung, Art)) %>%      
+  left_join(tbl(db, "Traits_Pl")) %>% 
+  filter(!is.na(aID_SP)) %>% 
+  as_tibble() %>% 
+  filter(!is.na(match(aID_KD, dat$aID_KD))) %>% 
+  transmute(
+    aID_KD = aID_KD,
+    aID_SP = aID_SP,
+    species = paste(Gattung, Art)
+  ) %>% 
+  arrange(aID_KD, aID_SP)
+
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Summary statistics ----
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+summarystat <- dat %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    N_sites = n_distinct(aID_STAO),
+    N_surveys = n(),
+    moos_SR = mean(AZ_mo) %>% round(2),
+    plants_SR = mean(AZ_pl) %>% round(2)
+  ) %>% 
+  left_join(
+    moss %>% left_join(dat) %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        moss_tot = n_distinct(aID_SP)
+      )) %>% 
+  left_join(
+    plants %>% left_join(dat) %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        plants_tot = n_distinct(aID_SP)
+      ))
+
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Save data for further analyses ----
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Remove survey ID
-dat <- dat %>% 
-  select(-aID_KD)
+# Remove aID_KD
+dat <- dat[, -1]
 
-# Replace CoordID with siteID
+# New aID_STAO
 dat$aID_STAO <- as.integer(factor(dat$aID_STAO))
+dat <- dat %>% arrange(aID_STAO, year)
 
 # Save data
-save(dat, file = "Data-raw/dat.RData")
+write_csv(dat, path = "Data-raw/surveys.csv")
+write_csv(summarystat, path = "Data-raw/summarystat.csv")
+
+
+
+
+
+
 
