@@ -11,6 +11,8 @@ library(tidyverse)
 library(ggthemes)
 library(Rmisc)
 library(knitr)
+library(arm)
+library(broom)
 
 # Knitr settings
 knitr::opts_chunk$set(
@@ -27,129 +29,128 @@ theme_set(
       legend.position = "none", 
       legend.background = element_rect(colour = "white"))
 )
-```
 
-
-# Methods
-
-## Plant and moss data
-- BDM beschreiben
-- Auswahl der Daten beschreiben:
-  - Nur Sites mit mindestens 3 Moos und Pflanzenarten
-- Temperaturkennzahlen beschreiben
-
-
-```{r}
 # Read data
-surveys <- read_csv("Data-raw/surveys.csv") 
-```
+surveys <- read_csv("Data-raw/surveys.csv") %>% 
+  mutate(
+    ele = (elevation - 1000) / 200
+  )
+dat <- read_csv("Data-raw/dat.csv") %>% 
+  mutate(
+    ele = (elevation - 1000) / 200
+  )
+load("Data-raw/stats.RData")
 
-
-## Statistical methods
-
-```{r prepare_site_data, results=FALSE}
-# Function to get temporal trend
-get_trend <- function(mes, year) {
-  res <- NA
-  try({
-    dd <- tibble(y = mes, yr = (year -2010)/10) 
-    mod <- lm(y ~ yr, data = dd)
-    res <- coef(mod)[2]
-  })
+# Help function to return appropriately formated results (effect size, p-values)
+getformated <- function(x, digits = 3) {
+  res <- sprintf(paste0("%.", digits, "f"), x)
+  if(res == "0.000") res <- "<0.001"
   res
 }
 
-# Calculate averages and temporal trends per site
-dat <- surveys %>% 
-  group_by(aID_STAO) %>% 
-  dplyr::summarise(
-    elevation = mean(elevation),
-    HS = first(HS),
-    land_use = first(land_use),
-    SR_pl_mean = mean(AZ_pl, na.rm = TRUE),
-    SR_pl_trend = get_trend(AZ_pl, year),
-    T_pl_mean = mean(T_pl, na.rm = TRUE),
-    T_pl_trend = get_trend(T_pl, year),
-    SR_mo_mean = mean(AZ_mo, na.rm = TRUE),
-    SR_mo_trend = get_trend(AZ_mo, year),
-    T_mo_mean = mean(T_mo, na.rm = TRUE),
-    T_mo_trend = get_trend(T_mo, year)
-  ) 
-
 ```
+
+# Introduction
+
+Main hypotheses to test:
+
+(i) Since compared to plants, bryophytes are usually more diverse in the harsh alpine environments we predict the ratio in the number of bryophyte to plant species to increase along the elevational gradient.
+
+(ii) Due to their higher sensitivity to environmental changes and their higher dispersal capacity we expect that bryophytes show higher temporal turn-over than plants, and, consequently, 
+
+(iii)	thermophilisation is more pronounced among bryophyte than among vascular plant communities.
+
+(iiii)	Since disturbance events are likely to be more frequently in grasslands than in forests and the requency is likely to decrease with elevation, we predicted higher turnover in grassland than in forests and higher turnover in lowland communities than in alpine communities. Similarly, is likely to be higher in grassland and lowland communities.
+
+
+# Materials and methods
+
+## Study area and field data
+About 70% of Switzerland is mountainous (60% Alps and 10% Jura Mountains); the altitudinal range is from 193 to 4634 m.a.s.l. We analyzed the presence/absence of bryophyte and plant species sampled in the frame of the Swiss biodiversity monitoring (BDM, [www.biodiversitymonitoring.ch](http://www.biodiversitymonitoring.ch/)) program that was launched in 2001 to monitor Switzerland’s biodiversity [@weber_2004]. Bryophytes and vascular plants are investigated in a systematic sample of about 1800 circular 10 $m^2$ plots laid out as a regular grid over entire Switzerland.
+
+Fieldwork was highly standardized and was carried out by qualified botanists. The botanists visited each plot twice per season except for the plots at high altitudes with a short vegetation period that were inspected only once. During the two visits all the species detected on the plot were recorded [for more details see @buhler_2011; @plattner_2004]. During the first visit, all bryophytes up to 1.5 m were collected from the soil, dead wood, rocks, living trees and scrubs and sent to specialists for identification. The botanists also classified every plot according to its type of habitat following @delarze_2015. In this study, we analysed the data of surveys that were classified as "forests", "grassland" or "unused" open areas. 
 
 ```{r}
-d <- read_csv("Data-raw/summarystat.csv")
-kable(d, caption = "Summary statistics of BDM moss and plant surveys.", booktabs = T)
+# Calculate number of surveys per land-use type
+fo <- sum(surveys$land_use == "forest")
+gr <- sum(surveys$land_use == "grassland")
+un <- sum(surveys$land_use == "unused")
+
+# Calculate number of plots and surveys per elevational band
+co_plot <- n_distinct(surveys$aID_STAO[surveys$HS == "colline"])
+co_surv <- sum(surveys$HS == "colline")
+mo_plot <- n_distinct(surveys$aID_STAO[surveys$HS == "montane"])
+mo_surv <- sum(surveys$HS == "montane")
+suba_plot <- n_distinct(surveys$aID_STAO[surveys$HS == "subalpine"])
+suba_surv <- sum(surveys$HS == "subalpine")
+alp_plot <- n_distinct(surveys$aID_STAO[surveys$HS == "alpine"])
+alp_surv <- sum(surveys$HS == "alpine")
 ```
 
+BDM field work started in 2001 and we analysed all data from start until 2018. Each year, about a fifth of the sample plots are surveyed and every plot is resampled every five years. In the analyses we only included the surveys for which both the bryophyte and vascular plant surveys met our standards of data collection. The final sample included the data from `r n_distinct(surveys$aID_STAO)` study plots (Fig. \@ref(fig:studysite)) and `r nrow(surveys)` surveys (that is in average `r table(surveys$aID_STAO) %>% mean() %>% round(1)` surveys per plot). Of all the surveys, `r fo` (`r round(100 * fo / nrow(surveys))`%) of the surveys were conducted in forests, `r gr` (`r round(100 * gr / nrow(surveys))`%) of the surveys were conducted in grassland, and `r un` (`r round(100 * un / nrow(surveys))`%) of the surveys were conducted in unused areas. The distribution of plots and surveys across the elevational belts was as following: `r co_plot` plots (`r co_surv` surveys) in the colline belt, `r mo_plot` plots (`r mo_surv` surveys) in the montane belt, `r suba_plot` plots (`r suba_surv` surveys) in the subalpine belt and `r alp_plot` plots (`r alp_surv` surveys) in the alpine belt.
+
+> Ev. alle "unused" Aufnahmen aus der collinen und montanen Stufen streichen?
+
+```{r studysite, fig.cap="Distribution of the study plots accross Switzerland. Background data source: Swisstopo, Federal Office of Topography."}
+include_graphics("studysite.pdf")
+```
+
+## Community measures
+To describe the observed communities we only used the records of bryophytes and vascular plants that were identified on the species level. We used three differnt measures to describe of community and their change between time points: (1) We used the total number of recorded species as a measure of community richness. (2) We use the the temporal turnover [i.e., species exchange ratio between two points in time sensu @hillebrand_2018] to describe how many species are exchanged between different time points. (3) To describe the temperature affinities of communities we used the Landolt temperature indicator value [@landolt_2010]. Similar to the Ellenberg indicator values [@ellenberg_1974], the Landolt values are ordinal numbers that express the realized ecological optima of species. The Landolt indicator values were developed for the specific situation in Switzerland, published the first time in @landolt_1977 and recalibrated in @landolt_2010. If the mean temperature value of a community increases over time we speak of "termophilisation". 
+
+## Statistical methods
+
+Describe covariates that were used:
+
+- Elevation
+- Höhenstufen
+
+Describe statistical methods: 
+
+- How we calculated averages and trends per site for the thre community measures.
+
+## Data accessibility and reproducibility of results
+Data and R Markdown documents to fully reproduce this manuscript including figures and tables are provided at https://github.com/TobiasRoth/moss-plant-comparison. An R Markdown document is written in markdown (plain text format) and contains chunks of embedded R code to produce the figures and tables [@xie_2018]. Raw data for analyses are provided in the folder "data-raw" and the folder "R" contains the R-Script that was used to export the data from the BDM database. The folder "div" contains a list of all the R packages (including version number) that were in the workspace when the manuscript was rendered. The final version of the repository will be archived at Zenodo (https://zenodo.org/).
 
 # Results
-- Except for forests at lower elevations, the average T value of mosses was slightly larger than for plants (Fig. \@ref(fig:T-state-elevation)). 
-- Termophilisation tends to be larger in mosses than in plants, particularly in the open habitats in the subalpine and alpine region (Fig. \@ref(fig:T-trend-HS)). 
 
-```{r T-state-elevation, fig.cap = "Mean temperature values along the elevational gradient for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot. Given are mean temperature values of recorded plants (green) and mosses (orange)."}
-# Plot: elevational gradient in T-values for forest plots
-forest <-
-  dat %>% 
-  filter(land_use == "forest") %>% 
-  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
-  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
-  gather("speciesgroup", "T", plants, moss) %>% 
-  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
-  geom_point(cex = 0.3) +
-  geom_smooth(lwd = 0.7) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  ylim(1,5) + 
-  xlim(250, 3100) +
-  labs(
-    x = "Elevation (m)",
-    y = "Mean temperature value",
-    title = "(A) Forests"
-  )
+## Species richness
+```{r}
+# Apply Binomial-GLMM to infer whether the proportion of bryophytes increases along elevation 
+fomod <- 
+  glmer(
+    cbind(AZ_mo, AZ_pl) ~ ele + (1|aID_STAO), 
+    family = binomial, 
+    data = surveys %>% filter(land_use == "forest")) %>% 
+  tidy
+fomod$estimate <- sprintf("%.2f", fomod$estimate)  
+fomod$p.value <- sprintf("%.3f", fomod$p.value)  
+fomod$p.value[fomod$p.value == "0.000"] <- "<0.001"
 
-# Plot: elevational gradient in T-values for grassland plots
-grassland <-
-  dat %>% 
-  filter(land_use == "grassland") %>% 
-  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
-  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
-  gather("speciesgroup", "T", plants, moss) %>% 
-  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
-  geom_point(cex = 0.3) +
-  geom_smooth(lwd = 0.7) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  ylim(1,5) + 
-  xlim(250, 3100) +
-  labs(
-    x = "Elevation (m)",
-    y = "Mean temperature value",
-    title = "(B) Grassland"
-  )
+grmod <- 
+  glmer(
+    cbind(AZ_mo, AZ_pl) ~ ele + (1|aID_STAO), 
+    family = binomial, 
+    data = surveys %>% filter(land_use == "grassland")) %>% 
+  tidy
+grmod$estimate <- sprintf("%.2f", grmod$estimate)  
+grmod$p.value <- sprintf("%.3f", grmod$p.value)  
+grmod$p.value[grmod$p.value == "0.000"] <- "<0.001"
 
-# Plot: elevational gradient in T-values for unused plots
-unused <-
-  dat %>% 
-  filter(land_use == "unused") %>% 
-  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
-  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
-  gather("speciesgroup", "T", plants, moss) %>% 
-  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
-  geom_point(cex = 0.3) +
-  geom_smooth(lwd = 0.7) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  ylim(1,5) + 
-  xlim(250, 3100) +
-  labs(
-    x = "Elevation (m)",
-    y = "Mean temperature value",
-    title = "(C) Unused"
-  )
-multiplot(forest, grassland, unused, cols = 3)
+unmod <- 
+  glmer(
+    cbind(AZ_mo, AZ_pl) ~ ele + (1|aID_STAO), 
+    family = binomial, 
+    data = surveys %>% filter(land_use == "unused")) %>% 
+  tidy
+unmod$estimate <- sprintf("%.2f", unmod$estimate)  
+unmod$p.value <- sprintf("%.3f", unmod$p.value)  
+unmod$p.value[unmod$p.value == "0.000"] <- "<0.001"
 ```
 
+Across all surveys, `r stats$Tot_N_Spec_mo` moss species and `r stats$Tot_N_Spec_pl` plant species were recorded. The average (±SD) species number per plot was `r mean(dat$SR_mo_mean) %>% round(2)` (±`r sd(dat$SR_mo_mean) %>% round(2)`) for bryophytes and `r mean(dat$SR_pl_mean) %>% round(2)` (±`r sd(dat$SR_pl_mean) %>% round(2)`) for plants. Overall, the average number of species per plot was higher for vascular plants than for bryophytes and the species richness of bryophytes and vascular plants both increased from low to intermediate elevations and except for bryophytes in grassland decreased again with higher elevations (i.e., a mid-elevational peak, Fig. \@ref(fig:SR-state-elevation)). Consistent with our hypotheses, the proportion of bryophytes (i.e., number of bryophytes divided by the total number of bryophytes and vascular plants) increased with elevation most strongly in grasslands (Binomial-GLMM with elevation as predictor variable and site ID as random effect; slope of elevation: `r grmod[2, "estimate"]`, p-value: `r grmod[2, "p.value"]`), intermediate in unused open areas (slope of elevation: `r unmod[2, "estimate"]`, p-value: `r unmod[2, "p.value"]`) and was almost absent in forests (slope of elevation: `r fomod[2, "estimate"]`, p-value: `r fomod[2, "p.value"]`).
 
-```{r SR-state-elevation, fig.cap = "Species richness along the elevational gradient for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot. Given are the number of recorded plant (green) and moss (orange) species per plot."}
+```{r SR-state-elevation, fig.cap = "Average species richness of bryophytes (orange) and vascular plants (green) along the elevational gradient. Shown are the patterns for plots with (A) forestst, (B) grassland and (C) unuesed open areas as land-use type acording to the first survey to each plot. Each point represents the mean number of recorded species of all surveys at one study plot."}
 # Plot: elevational gradient in species richness for forest plots
 forest <-
   dat %>% 
@@ -159,7 +160,7 @@ forest <-
   gather("speciesgroup", "T", plants, moss) %>% 
   ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
   geom_point(cex = 0.3) +
-  geom_smooth(lwd = 0.7) +
+  geom_smooth(method = lm, formula = y ~ x + I(x^2), lwd = 0.7) +
   scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
   ylim(0, 80) +
   xlim(250, 3100) +
@@ -178,7 +179,7 @@ grassland <-
   gather("speciesgroup", "T", plants, moss) %>% 
   ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
   geom_point(cex = 0.3) +
-  geom_smooth(lwd = 0.7) +
+  geom_smooth(method = lm, formula = y ~ x + I(x^2), lwd = 0.7) +
   scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
   ylim(0, 80) +
   xlim(250, 3100) +
@@ -197,7 +198,7 @@ unused <-
   gather("speciesgroup", "T", plants, moss) %>% 
   ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
   geom_point(cex = 0.3) +
-  geom_smooth(lwd = 0.7) +
+  geom_smooth(method = lm, formula = y ~ x + I(x^2), lwd = 0.7) +
   scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
   ylim(0, 80) +
   xlim(250, 3100) +
@@ -210,6 +211,164 @@ multiplot(forest, grassland, unused, cols = 3)
 ```
 
 
+## Temporal turnover
+```{r}
+# Wilcoxon signed rank test for overall differences between bryophytes and vascular plants
+overalldiff <- sprintf("%.3f", wilcox.test(dat$TU_mo, dat$TU_pl, paired = TRUE)$p.value)
+if(overalldiff == "0.000") overalldiff <- "<0.001"
+
+# Apply LMM to infer whether the temporal turnover changes along elevation and between land-use type
+mod <- lm(TU_mo ~ land_use * ele, data = dat) %>% anova
+resmo <- c(
+  getformated(mod["land_use:ele", "F value"], 2), 
+  getformated(mod["land_use:ele", "Pr(>F)"]))
+mod <- lm(TU_pl ~ land_use * ele, data = dat) %>% anova
+respl <- c(
+  getformated(mod["land_use:ele", "F value"], 2), 
+  getformated(mod["land_use:ele", "Pr(>F)"]))
+```
+
+The average temporal turnover across all sites was larger for bryphytes than for vascular plants (mean ± SD for bryophytes: `r sprintf("%.2f", mean(dat$TU_mo, na.rm = TRUE))` ± `r sprintf("%.2f", sd(dat$TU_mo, na.rm = TRUE))`; vascular plants:  `r sprintf("%.2f", mean(dat$TU_pl, na.rm = TRUE))` ± `r sprintf("%.2f", sd(dat$TU_pl, na.rm = TRUE))`; p-value based on Wilcoxon signed rank test: `r overalldiff`). The patern how the temporal turnover of bryophytes changed along elevation strongly differed between land-use types (Ancova with an interaction between land use types and elevation; F-value: `r resmo[1]`; p-value: `r resmo[2]`): while it decreased with elevation in forests, it tended to increase in grassland and unused open area (Fig. \@ref(fig:TU-state-elevation)). For vascualar plants in contrast, the temporal turn-over decreased from low to high elevations with only slight differences between land-use types (Ancova with an interaction between land use types and elevation; F-value: `r respl[1]`; p-value: `r respl[2]`; Fig. \@ref(fig:TU-state-elevation)).
+
+```{r TU-state-elevation, fig.cap = "Temporal turn-over of bryophytes (orange) and vascular plants (green) along the elevational gradient for plots that were (A) forestst, (B) grassland and (C) unused open areas acording to the first survey to each plot. Each point represents the proportional difference in the species lists of the surveys at one study plot."}
+
+# Plot: elevational gradient in temporal turnover for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(!is.na(TU_pl) & !is.na(TU_mo)) %>% 
+  mutate(plants = TU_pl, moss = TU_mo) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(method = "lm", lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(0, 1) +
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Temporal turn-over\n(proportional change in species lists)",
+    title = "(A) Forests"
+  )
+
+# Plot: elevational gradient in temporal turnover for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  filter(!is.na(TU_pl) & !is.na(TU_mo)) %>% 
+  mutate(plants = TU_pl, moss = TU_mo) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(method = "lm", lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(0, 1) +
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Temporal turn-over\n(proportional change in species lists)",
+    title = "(B) Grassland"
+  )
+
+# Plot: elevational gradient in temporal turnover for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(!is.na(TU_pl) & !is.na(TU_mo)) %>% 
+  mutate(plants = TU_pl, moss = TU_mo) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(method = "lm", lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(0, 1) +
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Temporal turn-over\n(proportional change in species lists)",
+    title = "(C) Unused"
+  )
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+## Temperature affinities and termophilisation
+```{r}
+# Wilcoxon signed rank test for overall differences in temperature values between bryophytes and vascular plants
+overalldiff <- 
+  wilcox.test(dat$T_mo_mean, dat$T_pl_mean, paired = TRUE)$p.value %>% 
+  getformated
+avdiff <- mean(dat$T_mo_mean - dat$T_pl_mean, na.rm = TRUE) %>% getformated(2)
+
+# Differences along elevation
+d <- dat %>% mutate(diff = T_mo_trend - T_pl_trend)
+mod <- lm(diff ~ ele, data = d %>% filter(land_use == "forest")) %>% summary
+mod <- lm(diff ~ ele, data = d %>% filter(land_use == "grassland")) %>% summary
+mod <- lm(diff ~ ele, data = d %>% filter(land_use == "unused")) %>% summary
+```
+
+Across all sites, the mean temperature value of species communities (i.e., the temperature affinities of communities) tended to be hihger in bryophytes than in vascular plants (temperature affinities of bryophytes - vascular plants: `r avdiff`; p-value of Wilcoxon signed rank test: `r overalldiff`). This slightly higher temperature values of bryophyt communities was evident along the entire gradient in all habitats except for forests at lower elevations were it was inversed (Fig. \@ref(fig:T-state-elevation)).
+
+```{r T-state-elevation, fig.cap = "Mean temperature values along the elevational gradient for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot. Given are mean temperature values of recorded plants (green) and mosses (orange)."}
+# Plot: elevational gradient in T-values for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
+  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(method = lm, formula = y ~ x + I(x^2), lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1,5) + 
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean temperature value",
+    title = "(A) Forests"
+  )
+
+# Plot: elevational gradient in T-values for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
+  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(method = lm, formula = y ~ x + I(x^2), lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1,5) + 
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean temperature value",
+    title = "(B) Grassland"
+  )
+
+# Plot: elevational gradient in T-values for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(!is.na(T_pl_mean) & !is.na(T_mo_mean)) %>% 
+  mutate(plants = T_pl_mean, moss = T_mo_mean) %>% 
+  gather("speciesgroup", "T", plants, moss) %>% 
+  ggplot(aes(y = T, x = elevation, col = speciesgroup)) +
+  geom_point(cex = 0.3) +
+  geom_smooth(method = lm, formula = y ~ x + I(x^2), lwd = 0.7) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(1,5) + 
+  xlim(250, 3100) +
+  labs(
+    x = "Elevation (m)",
+    y = "Mean temperature value",
+    title = "(C) Unused"
+  )
+multiplot(forest, grassland, unused, cols = 3)
+```
+
+Termophilisation (i.e., the temporal trend in temperature values over time) tended to be larger in bryophytes than in vascular plants, particularly in the open habitats in the subalpine and alpine region (Fig. \@ref(fig:T-trend-HS)). However, uncertainity in termophilisation was comparatively large for bryophytes, calling for cautious interpretation.
 
 ```{r T-trend-HS, fig.cap = "Termophilisation between 2001 and 2018 of mosses (orange) and plants (green) for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot."}
 
@@ -318,223 +477,9 @@ unused <-
 multiplot(forest, grassland, unused, cols = 3)
 ```
 
-```{r SR-trend-HS, fig.cap = "Temporal change in species richness between 2001 and 2018 of mosses (orange) and plants (green) for plots that were (A) forestst, (B) grassland and (C) unuesed open areas acording to the first survey to each plot."}
-
-dat$HS[dat$HS == "subalpine"] <- "sub-\nalpine"
-
-# Plot: temporal change across HS for forest plots
-forest <-
-  dat %>% 
-  filter(land_use == "forest") %>% 
-  filter(HS != "alpine") %>% 
-  group_by(HS) %>% 
-  dplyr::summarise(
-    mean = mean(SR_pl_trend, na.rm = TRUE),
-    lo = t.test(SR_pl_trend)$conf.int[1],
-    up = t.test(SR_pl_trend)$conf.int[2],
-    gr = "plants") %>% 
-  rbind(
-    dat %>% 
-      filter(land_use == "forest") %>% 
-      filter(HS != "alpine") %>% 
-      group_by(HS) %>% 
-      dplyr::summarise(
-        mean = mean(SR_mo_trend, na.rm = TRUE),
-        lo = t.test(SR_mo_trend)$conf.int[1],
-        up = t.test(SR_mo_trend)$conf.int[2],
-        gr = "moss")) %>% 
-  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
-  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
-  geom_abline(slope = 0, intercept = 0, lty = 2) +
-  geom_point(position = position_dodge(width = 0.25)) +
-  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  # ylim(-0.22, 0.22) + 
-  labs(
-    x = "",
-    y = "Change in species richness\n (change in number of species per decade)",
-    title = "(A) Forests"
-  )
-
-# Plot: temporal change across HS for grassland plots
-grassland <-
-  dat %>% 
-  filter(land_use == "grassland") %>% 
-  group_by(HS) %>% 
-  dplyr::summarise(
-    mean = mean(SR_pl_trend, na.rm = TRUE),
-    lo = t.test(SR_pl_trend)$conf.int[1],
-    up = t.test(SR_pl_trend)$conf.int[2],
-    gr = "plants") %>% 
-  rbind(
-    dat %>% 
-      filter(land_use == "grassland") %>% 
-      group_by(HS) %>% 
-      dplyr::summarise(
-        mean = mean(SR_mo_trend, na.rm = TRUE),
-        lo = t.test(SR_mo_trend)$conf.int[1],
-        up = t.test(SR_mo_trend)$conf.int[2],
-        gr = "moss")) %>% 
-  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
-  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
-  geom_abline(slope = 0, intercept = 0, lty = 2) +
-  geom_point(position = position_dodge(width = 0.25)) +
-  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  # ylim(-0.22, 0.22) + 
-  labs(
-    x = "",
-    y = "Change in species richness\n (change in number of species per decade)",
-    title = "(B) Grassland"
-  )
-
-# Plot: temporal change across HS for unused plots
-unused <-
-  dat %>% 
-  filter(land_use == "unused") %>% 
-  filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
-  group_by(HS) %>% 
-  dplyr::summarise(
-    mean = mean(SR_pl_trend, na.rm = TRUE),
-    lo = t.test(SR_pl_trend)$conf.int[1],
-    up = t.test(SR_pl_trend)$conf.int[2],
-    gr = "plants") %>% 
-  rbind(
-    dat %>% 
-      filter(land_use == "unused") %>% 
-      filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
-      group_by(HS) %>% 
-      dplyr::summarise(
-        mean = mean(SR_mo_trend, na.rm = TRUE),
-        lo = t.test(SR_mo_trend)$conf.int[1],
-        up = t.test(SR_mo_trend)$conf.int[2],
-        gr = "moss")) %>% 
-  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
-  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
-  geom_abline(slope = 0, intercept = 0, lty = 2) +
-  geom_point(position = position_dodge(width = 0.25)) +
-  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  # ylim(-0.22, 0.22) + 
-  labs(
-    x = "",
-    y = "Change in species richness\n (change in number of species per decade)",
-    title = "(C) Unused"
-  )
-
-multiplot(forest, grassland, unused, cols = 3)
-```
-
-
-```{r}
-d <- dat %>% 
-  mutate(
-    Diff = T_mo_trend - T_pl_trend,
-    Ele = (elevation - 1000) / 200)
-lm(Diff ~ 1, data = d) %>% summary
-```
-
-```{r}
-dat$HS[dat$HS == "subalpine"] <- "sub-\nalpine"
-
-# Plot: temporal change across HS for forest plots
-forest <-
-  dat %>% 
-  filter(land_use == "forest") %>% 
-  filter(HS != "alpine") %>% 
-  group_by(HS) %>% 
-  dplyr::summarise(
-    mean = mean(T_pl_mean, na.rm = TRUE),
-    lo = t.test(T_pl_mean)$conf.int[1],
-    up = t.test(T_pl_mean)$conf.int[2],
-    gr = "plants") %>% 
-  rbind(
-    dat %>% 
-      filter(land_use == "forest") %>% 
-      filter(HS != "alpine") %>% 
-      group_by(HS) %>% 
-      dplyr::summarise(
-        mean = mean(T_mo_mean, na.rm = TRUE),
-        lo = t.test(T_mo_mean)$conf.int[1],
-        up = t.test(T_mo_mean)$conf.int[2],
-        gr = "moss")) %>% 
-  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
-  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
-  geom_point(position = position_dodge(width = 0.25)) +
-  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  ylim(1.4, 3.6) +
-  labs(
-    x = "",
-    y = "Thermophilisation\n (temporal trend in T values per decade)",
-    title = "(A) Forests"
-  )
-
-# Plot: temporal change across HS for grassland plots
-grassland <-
-  dat %>% 
-  filter(land_use == "grassland") %>% 
-  group_by(HS) %>% 
-  dplyr::summarise(
-    mean = mean(T_pl_mean, na.rm = TRUE),
-    lo = t.test(T_pl_mean)$conf.int[1],
-    up = t.test(T_pl_mean)$conf.int[2],
-    gr = "plants") %>% 
-  rbind(
-    dat %>% 
-      filter(land_use == "grassland") %>% 
-      group_by(HS) %>% 
-      dplyr::summarise(
-        mean = mean(T_mo_mean, na.rm = TRUE),
-        lo = t.test(T_mo_mean)$conf.int[1],
-        up = t.test(T_mo_mean)$conf.int[2],
-        gr = "moss")) %>% 
-  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
-  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
-  geom_point(position = position_dodge(width = 0.25)) +
-  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  ylim(1.4, 3.6) +
-  labs(
-    x = "",
-    y = "Thermophilisation\n (temporal trend in T values per decade)",
-    title = "(B) Grassland"
-  )
-
-# Plot: temporal change across HS for unused plots
-unused <-
-  dat %>% 
-  filter(land_use == "unused") %>% 
-  filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
-  group_by(HS) %>% 
-  dplyr::summarise(
-    mean = mean(T_pl_mean, na.rm = TRUE),
-    lo = t.test(T_pl_mean)$conf.int[1],
-    up = t.test(T_pl_mean)$conf.int[2],
-    gr = "plants") %>% 
-  rbind(
-    dat %>% 
-      filter(land_use == "unused") %>% 
-      filter(HS == "sub-\nalpine" | HS == "alpine") %>% 
-      group_by(HS) %>% 
-      dplyr::summarise(
-        mean = mean(T_mo_mean, na.rm = TRUE),
-        lo = t.test(T_mo_mean)$conf.int[1],
-        up = t.test(T_mo_mean)$conf.int[2],
-        gr = "moss")) %>% 
-  mutate(HS = factor(HS, levels = c("colline", "montane", "sub-\nalpine", "alpine"))) %>% 
-  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
-  geom_point(position = position_dodge(width = 0.25)) +
-  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
-  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
-  ylim(1.4, 3.6) +
-  labs(
-    x = "",
-    y = "Thermophilisation\n (temporal trend in T values per decade)",
-    title = "(C) Unused"
-  )
-
-multiplot(forest, grassland, unused, cols = 3)
-```
-
 # References
+```{r}
+# The MS was build with the following R session:
+# writeLines(capture.output(sessionInfo()), "div/sessionInfo.txt")
+```
+
