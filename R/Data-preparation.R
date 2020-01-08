@@ -8,6 +8,7 @@ library(tidyverse)
 library(RColorBrewer)
 library(BDM)
 library(simba)
+library(raster)
 
 # Connection to data base
 db <- src_sqlite(path = "DB/DB_BDM_2019_08_18.db", create = FALSE)
@@ -17,8 +18,8 @@ db <- src_sqlite(path = "DB/DB_BDM_2019_08_18.db", create = FALSE)
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # One line in "surveys" contains a survey (each plot is surveyed once every five
-# years). Surveys are included only if plant and moss surveys were considered
-# vallid with sufficient data quality.
+# years). Surveys are included only if vascular plant and bryophyte surveys were
+# considered valid with sufficient data quality.
 
 surveys <- 
   
@@ -42,7 +43,7 @@ surveys <-
         HS = HS
       )) %>% 
   
-  # Add plant data:
+  # Add vascular plant data:
   left_join(
     tbl(db, "Pl") %>% 
       left_join(tbl(db, "TRAITS_PL")) %>% 
@@ -52,14 +53,16 @@ surveys <-
         T_pl = mean(T, na.rm = TRUE) %>% round(2)
       )) %>% 
   
-  # Add moss data:
+  # Add bryophyte data:
   left_join(
     tbl(db, "Moos") %>% 
       left_join(tbl(db, "Traits_Moos")) %>% 
       group_by(aID_KD) %>% 
       dplyr::summarise(
         AZ_mo = n(),
-        T_mo = mean(T, na.rm = TRUE) %>% round(2)
+        T_mo = mean(T, na.rm = TRUE) %>% round(2),
+        T_mo_sh = mean(T[GenTime <= 6.6 & !is.na(GenTime)], na.rm = TRUE),
+        T_mo_lo = mean(T[GenTime > 6.6 & !is.na(GenTime)], na.rm = TRUE)
       )) %>% 
   as_tibble() %>% 
   replace_na(list(AZ_pl = 0, AZ_mo = 0)) 
@@ -76,20 +79,27 @@ surveys$HS[surveys$HS == "montan"] <- "montane"
 surveys$HS[surveys$HS == "subalpin"] <- "subalpine"
 surveys$HS[surveys$HS == "alpin"] <- "alpine"
 
+# Remove plots with land_use = unused in the colline, montane and subalpine zone
+# These are special cases (e.g. gravel pits, waste lands) and results can hardly
+# be interpreted.
+surveys <- surveys %>% 
+  filter(!(land_use == "unused" & HS == "colline")) %>% 
+  filter(!(land_use == "unused" & HS == "montane"))
+
 # Remove 1 outlier (Plot with 1 cryophilous bryophyte species at 358 asl, in the
 # floodplain of the Maggia river, the moss presumbably has been floated from
 # further above)
 surveys <- surveys[surveys$aID_KD!=3090399990,]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Export plant and moss data from DB ----
+# Export vascular plant and bryophyte data from DB ----
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Mosses
+# Bryophytes
 moss <- 
   tbl(db, "Moos") %>% 
   left_join(tbl(db, "KD_Z9")) %>% 
-  left_join(tbl(db, "ARTEN") %>% select(aID_SP, Gattung, Art)) %>%      
+  left_join(tbl(db, "ARTEN") %>% dplyr::select(aID_SP, Gattung, Art)) %>%      
   left_join(tbl(db, "Traits_Moos")) %>% 
   filter(!is.na(aID_SP)) %>% 
   as_tibble() %>% 
@@ -102,11 +112,11 @@ moss <-
   ) %>% 
   arrange(aID_KD, aID_SP)
 
-# plants
+# Vascular plants
 plants <- 
   tbl(db, "PL") %>% 
   left_join(tbl(db, "KD_Z9")) %>% 
-  left_join(tbl(db, "ARTEN") %>% select(aID_SP, Gattung, Art)) %>%      
+  left_join(tbl(db, "ARTEN") %>% dplyr::select(aID_SP, Gattung, Art)) %>%      
   left_join(tbl(db, "Traits_Pl")) %>% 
   filter(!is.na(aID_SP)) %>% 
   as_tibble() %>% 
@@ -122,6 +132,7 @@ plants <-
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Prepare site data ----
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 # Function to get temporal trend
 get_trend <- function(mes, year) {
   res <- NA
@@ -147,7 +158,11 @@ dat <- surveys %>%
     SR_mo_mean = mean(AZ_mo, na.rm = TRUE),
     SR_mo_trend = get_trend(AZ_mo, year),
     T_mo_mean = mean(T_mo, na.rm = TRUE),
-    T_mo_trend = get_trend(T_mo, year)
+    T_mo_sh_mean = mean(T_mo_sh, na.rm = TRUE),
+    T_mo_lo_mean = mean(T_mo_lo, na.rm = TRUE),
+    T_mo_trend = get_trend(T_mo, year),
+    T_mo_sh_trend = get_trend(T_mo_sh, year),
+    T_mo_lo_trend = get_trend(T_mo_lo, year)
   ) 
 
 # Turnover between two survey from the same year
@@ -159,12 +174,14 @@ getturnover <- function(x, specdat) {
     res <- 
       tt %>% 
       transmute(aID_KD = aID_KD, aID_SP = aID_SP, Occ = 1) %>% 
-      sim(method = "cocogaston", listin = TRUE, listout = TRUE) %>% 
+      simba::sim(method = "cocogaston", listin = TRUE, listout = TRUE) %>% 
       pull(cocogaston) %>% mean
   }
   res
 }
-# dat$TO_moss <- 
+
+# Apply functions for all sites, independently for bryophytes and vascular
+# plants
 dat$TU_mo <-  map_dbl(1:nrow(dat), getturnover, specdat = moss)
 dat$TU_pl <-  map_dbl(1:nrow(dat), getturnover, specdat = plants)
 
