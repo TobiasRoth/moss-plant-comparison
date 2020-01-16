@@ -1,5 +1,5 @@
 ---
-title: Major land plant linages respond differently to climate warming
+title: Major land plant lineages respond differently to climate warming
 author: |
   | Thomas Kiebacher^[Corresponding author: thomas.kiebacher@systbot.uzh.ch] $^1$, 
     Tabea Kipfer $^2$, Tobias Roth $^{2,3}$
@@ -22,13 +22,13 @@ abstract: |
   
   1.  Climate warming studies on plants are currently highly biased towards vascular plants. Bryophytes, the second largest group of land plants that are particularly diverse in harsh environments, however, have received comparatively little attention.
   
-  2. In this study we compared the temporal change of species richness, species turnover and termophilisation from 2001 to 2018 between bryophytes and vascular plants within a mountainous region in Central Europe. We compared differences between bryophytes and vasular plants among forests, grassland and unused open areas  across an elevational gradient from about 200 to 3000m.
+  2. In this study we compared the temporal change of species richness, species turnover and termophilisation from 2001 to 2018 between bryophytes and vascular plants within a mountainous region in Central Europe. We compared differences between bryophytes and vascular plants among forests, grassland and unused open areas using data from 1174 study sites that span an elevational gradient from about 200 to 3000m.
   
-  3. We found that particularly in grasslands, the proportion of bryophytes  among recorded plants (i.e., bryophytes and vascular plants) strongly increased along the elevational gradient, suggesting that bryophytes are relatively more diverse in the harsh alpine environments. Presumably due to their higher sensitivity to environmental changes, their shorter live spans and their higher dispersal capacity, the temporal turnover of bryophyte species was much higher than the temporal turnover of vascular plant species.  And as a likely consequence of hihger turnover, bryophyte communities reacted faster to climate warming than vascular plant communities, which was evidenced by  more pronounced termophylisation in bryophytes. The link between a faster reaction of communities to climate warming and differences in live spans was further supported by the faster termophilisation of short-lived bryophytes compared with long-lived bryophytes. 
+  3. We found that particularly in grasslands, the proportion of bryophytes  among recorded plants (i.e., bryophytes and vascular plants) strongly increased along the elevational gradient, suggesting that bryophytes compared to vascular plants are relatively more diverse in the harsh alpine environments. Presumably due to their higher sensitivity to environmental changes, their shorter live spans and their higher dispersal capacity, the temporal turnover of bryophyte species was much higher than the temporal turnover of vascular plant species.  And as a likely consequence of higher turnover, bryophyte communities reacted faster to climate warming than vascular plant communities, which was evidenced by  more pronounced thermophilisation in bryophytes. The link between a faster reaction of communities to climate warming and differences in live spans was further supported by the faster thermophilisation of short-lived bryophytes compared with long-lived bryophytes. 
   
-  4. *Synthesis.* We report subtile differences on how bryophytes and vascular plants communities changed over the last two decades and suggest that these changes are at least partly due to recent climate warming. While bryophytes were fastere than vascular plants in in tracking climate warming, in open areas overall species richness changed in favor of vascular plants, suggesting that in sum more vascular plants than bryophytes profited from recent climate warming. 
+  4. *Synthesis.* We report subtile differences on how bryophytes and vascular plants communities changed over the last two decades and suggest that these changes are at least partly due to recent climate warming. While bryophytes were faster than vascular plants in  tracking climate warming, in open areas overall species richness changed in favor of vascular plants, suggesting that in sum more vascular plants than bryophytes profited from recent climate warming. 
   
-  **Keywords:** Bryophytes, disturbance, climate change, life strategies, mountain ecosystems, community temperature index, vascular plants
+  **Keywords:** Bryophytes, climate change, life strategy, mountain ecosystems, community temperature index, vascular plants
 ---
 
 ```{r setup, include=FALSE, message=FALSE}
@@ -84,23 +84,23 @@ out <- function(res, pvalue = FALSE, digits = 2) {
 
 Climate warming is one of the major challenges organisms have to face and one of the major treats to biodiversity in the 21th century [@penuelas_2013; @wiens_2016; @ipbes_2019]. Changes in species range, abundance and phenology  successively alter extant ecosystems [@chen_2011; @dorji_2013; @soudzilovskaia_2013; @shi_2015]. Spatial range shifts, poleward in latitude and upslope in elevation, are among the best documented phenomena of climate warming leading to the replacement of cold-dwelling with warm-dwelling species (i.e., thermophilisation) in extant communities, which ultimately leads to the extinction of some of the species [@engler_2009; @gottfried_2012; @lenoir_2015; @wiens_2016; @freeman_2018].
 
-However, range dynamics, or more specifically, how fast species track climatic warming vary considerably between taxonomic and functional groups [@parmesan_2003; @roth_2014; @essl_2015; @wiens_2016; @maclean_2017]. Especially species' life strategies are suggested to reflect their potential to track climatic warming. For example, observed range shifts are usually larger and less delayed for species with high dispersal capacities and short life cycles [@angert_2011; @cotto_2017; @maclean_2017]. Furthermore, disturbance intensities that often differ between land use types determine species turnover and thus have impact on thermophilisation processes [@oliver_2014; @stevens_2015].
+However, range dynamics, or more specifically, how fast species track shifting isotherms vary considerably between taxonomic and functional groups [@parmesan_2003; @roth_2014; @essl_2015; @wiens_2016; @maclean_2017]. Especially species' life strategies are suggested to reflect their potential to track shifting isotherms. For example, observed range shifts are usually larger and less delayed for species with high dispersal capacities and short life cycles [@angert_2011; @cotto_2017; @maclean_2017]. Furthermore, disturbance intensities that often differ between land use types determine species turnover and thus have impact on thermophilisation processes [@oliver_2014; @stevens_2015].
 
 For plants, substantial time lags were observed with realised shifts being much smaller than expected given the observed temperature increase; both, at the species and the community level [@bertrand_2011; @corlett_2013; @rixen_2018; @martin_2019]. Furthermore, range shifts seem to decrease with increasing elevation [@angert_2011; @rumpf_2018] albeit at higher elevations temperature increase is usually more pronounced [@ohmura_2012; @rangwala_2013] and mountain ecosystems are supposed to be particularly sensitive to climate warming [@kohler_2014; @dobrowski_2016; @vanneste_2017]. 
 
-Studies of the impacts of climate warming on plants are highly biased towards vascular plants. Bryophytes, the second largest group of land plants, hitherto received little attention [@he_2016; @corlett_2013], although they often constitute a large part of the local and regional plant biodiversity and provide key ecosystem services [@lindo_2010; @hallingback_2014]. Bryophytes play a significant role in nutrient, carbon and water cycling and the resilience of ecosystems [@turetsky_2012; @szyja_2019]. Compared to vascular plants they are generally more diverse and abundant in harsh environments, e.g. at high latitudes and elevations [@bruun_2006; @proctor_2011; @turetsky_2012; @mateo_2016]. 
+Studies of the impacts of climate warming on plants are highly biased towards vascular plants. Bryophytes, the second largest group of land plants after flowering plants, hitherto received little attention [@he_2016; @corlett_2013], although they often constitute a large part of the local and regional plant biodiversity and provide key ecosystem services [@lindo_2010; @hallingback_2014]. Bryophytes play a significant role in nutrient, carbon and water cycling and the resilience of ecosystems [@turetsky_2012; @szyja_2019]. Compared to vascular plants they are generally more diverse and abundant in harsh environments, e.g. at high latitudes and elevations [@bruun_2006; @proctor_2011; @turetsky_2012; @mateo_2016]. 
 
-Bryophytes fundamentally differ in their ecophysiological properties from vascular plants and are expected to be differently affected by climate warming [@he_2016]. They are poikilohydric (i.e., the lack to regulate the water content) and absorb humidity and nutrients directly from the atmosphere, hence, they are more directly linked to the abiotic environment and are usually more sensitive to environmental changes [@proctor_2009; @hallingback_2014; @becker-scarpitta_2017]. On the other hand, many bryophyte species do not depend on a well-developed soil layer and some of them can grow directly on bare rock surfaces. This makes them excellent pioneer species, able to colonize newly formed habitat where competing vascular plants are absent. Furthermore, the life strategy types of bryophytes encompass a wide range, from fugative and very short-lived (a few weeks) types inhabiting transient habitats, to competitive and long-lived types that dominate persistent communities and bryophytes often differ from vascular plants in their high dispersal capacity [@frahm_2007; @medina_2011].  Short life cycles and high dispersal capacities  are likely to be positively related to the magnitude of range shifts under recent climate warming [corlett_2013; @maclean_2017].
+Bryophytes fundamentally differ in their ecophysiological properties from vascular plants and are expected to be differently affected by climate warming [@he_2016]. They are poikilohydric (i.e., the lack to regulate the water content) and absorb humidity and nutrients directly from the atmosphere, hence, they are more directly linked to the abiotic environment and are usually more sensitive to environmental changes [@proctor_2009; @hallingback_2014; @becker-scarpitta_2017]. Furthermore, many bryophyte species do not depend on a well-developed soil layer and some of them can grow directly on bare rock surfaces. This makes them excellent pioneer species, able to colonise newly formed habitat where competing vascular plants are absent. Furthermore, the life strategy types of bryophytes encompass a wide range, from fugative and very short-lived (a few weeks) types inhabiting transient habitats, to competitive and long-lived types that dominate persistent communities. Bryophytes often differ from vascular plants in their high dispersal capacity via small diaspores [@frahm_2007; @medina_2011]. Short life cycles and high dispersal capacities  are likely to be positively related to the magnitude of range shifts under recent climate warming [corlett_2013; @maclean_2017].
 
-Here, we used a comparative approach to assess the impact of climate warming on bryophytes and vascular plants in a mountainous region in Central Europe. We examined data from more than 1000 permanent plots monitored  3-4 times between 2001 and 2018. Data were from the Biodiversity Monitoring Switzerland (BDM; www.biodiversitymonitoring.ch) that simultaneously surveyes species diversity of bryophytes and vascular plants on a systematic grid layed over entire Switzerland. To understand better how climate change affectds different species groups, such real-time monitoring data using standardized schemes provide a unique oportunity [@martin_2019; @henry_2008]. We inferred the change in species richness, the temporal species turnover [i.e., species exchange ratio between two points in time sensu @hillebrand_2018] and the average indicator values of temperature [i.e., community temperature index sensu @devictor_2008] between 2001 and 2018 and compared differences between bryophytes and vascular plants along the elevational gradient from about 200 to 3000m.
+Here, we used a comparative approach to assess the impact of climate warming on bryophytes and vascular plant communities in a mountainous region in Central Europe. We examined data from more than 1000 permanent plots monitored  3-4 times between 2001 and 2018 in the frame of the Biodiversity Monitoring Switzerland (BDM; www.biodiversitymonitoring.ch). This monitoring programme simultaneously surveys species diversity of bryophytes and vascular plants on a systematic grid layed over entire Switzerland. To gain a better understanding on how climate change affects different species groups, such real-time monitoring data using standardized schemes provide a unique opportunity [@martin_2019; @henry_2008]. We calculated changes in species richness, the temporal species turnover [i.e., species exchange ratio between two points in time sensu @hillebrand_2018] and changes in average indicator values of temperature [i.e., community temperature index sensu @devictor_2008] and compared differences between the two land plant lineages along an elevational gradient from about 200 to 3000 m a.s.l.
 
 
 # Materials and methods {-}
 
 ## Study area and field data {-}
-About 70% of Switzerland is mountainous (60% Alps and 10% Jura Mountains); the altitudinal range is from 193 to 4634 m.a.s.l. We analyzed the presence/absence of bryophyte and vascular plant species sampled in the frame of the Swiss biodiversity monitoring (BDM, [www.biodiversitymonitoring.ch](http://www.biodiversitymonitoring.ch/)) program that was launched in 2001 to monitor Switzerland’s biodiversity [@weber_2004]. Bryophytes and vascular plants are investigated in a systematic sample of about 1800 circular 10 $m^2$ plots laid out as a regular grid over entire Switzerland.
+About 70% of Switzerland is mountainous (60% Alps and 10% Jura Mountains); the altitudinal range is from 193 to 4634 m a.s.l. We analysed data on the presence/absence of bryophyte and vascular plant species recorded in the frame of the Swiss biodiversity monitoring programme (BDM, [www.biodiversitymonitoring.ch](http://www.biodiversitymonitoring.ch/)). This programme has been launched in 2001 to monitor Switzerland’s biodiversity [@weber_2004]. Bryophytes and vascular plants are investigated using a systematic sample of about 1800 circular 10 $m^2$ plots laid out as a regular grid over entire Switzerland.
 
-Fieldwork was highly standardized and was carried out by qualified botanists. The botanists visited each plot twice a season except for the plots at high altitudes with a short vegetation period that were inspected only once. During the two visits all vascular plant species detected on the plot were recorded [for more details on the vascula plant surveys see @buhler_2011; @plattner_2004]. During the first visit, bryophytes samples up to 1.5 m above ground were collected from the soil, dead wood, rocks, living trees and scrubs and sent to specialists for identification. The botanists also classified the land use category using a system of 32 pre-defined land use categories similar to the CORINE Land Cover system [@buttner_2004]. For annual reporting of the BDM results, the 32 land use categories were aggregated to the six main types of land use: forests, meadows and pastures, arable land, settlements, alpine pastures and unused open areas. Unused open areas included mostly screes and rocks at higher elevations but also included special cases at lower elevations such as gravel pits and waste lands. We thus removed the colline and montane plots from the unused open areas category (which we label "unused" from now). Further, we grouped meadows, pasturers and alpine pastures into one group labeled "grassland".
+Fieldwork was highly standardized and was carried out by qualified botanists. The botanists visited each plot twice a season except for the plots at high altitudes with a short vegetation period that were inspected only once. During the two visits all vascular plant species detected on the plot were recorded [for more details on the vascular plant surveys see @buhler_2011; @plattner_2004]. During the first visit, bryophytes samples up to 1.5 m above ground were collected from the soil, dead wood, rocks, living trees and scrubs and sent to specialists for identification. The botanists also classified the land use category using a system of 32 pre-defined land use categories similar to the CORINE Land Cover system [@buttner_2004]. For annual reporting of the BDM results, the 32 land use categories were aggregated to the six main types of land use: forests, meadows and pastures, arable land, settlements, alpine pastures and unused open areas. Unused open areas included mostly screes and rocks at higher elevations but also comprised special cases at lower elevations such as gravel pits and waste lands. We thus removed the colline and montane plots from the unused open areas category. Further, we aggregated meadows, pastures and alpine pastures into one group labeled "grassland".
 
 ```{r}
 # Calculate number of surveys per land-use type
@@ -119,23 +119,23 @@ alp_plot <- n_distinct(surveys$aID_STAO[surveys$HS == "alpine"])
 alp_surv <- sum(surveys$HS == "alpine")
 ```
 
-BDM field work started in 2001 and we analysed all data from start until 2018. Each year, about a fifth of the sample plots are surveyed and every plot is resampled every five years. In this study, we onlly analyzed the data of surveys that were classified as forests, grassland or unused and only data from surveys for which both the bryophyte and vascular plant surveys met our standards of data collection. The final sample included the data from `r n_distinct(surveys$aID_STAO)` study plots (Fig. \@ref(fig:studysite)) and `r nrow(surveys)` surveys (that is in average `r table(surveys$aID_STAO) %>% mean() %>% round(1)` surveys per plot). Of all the surveys, `r fo` (`r round(100 * fo / nrow(surveys))`%) of the surveys were conducted in forests, `r gr` (`r round(100 * gr / nrow(surveys))`%) of the surveys were conducted in grassland, and `r un` (`r round(100 * un / nrow(surveys))`%) of the surveys were conducted in unused open areas. 
+BDM field work started in 2001 and we analysed all data from start until 2018. Each year, about a fifth of the sample plots are surveyed and every plot is resampled every five years. In this study, we only analysed the data of surveys that were classified as forests, grassland or unused open areas and only data from surveys for which both the bryophyte and vascular plant surveys met our standards of data collection. The final sample included the data from `r n_distinct(surveys$aID_STAO)` study plots (Fig. \@ref(fig:studysite)) and `r nrow(surveys)` surveys (that is in average `r table(surveys$aID_STAO) %>% mean() %>% round(1)` surveys per plot). Of all the surveys, `r fo` (`r round(100 * fo / nrow(surveys))`%) of the surveys were conducted in forests, `r gr` (`r round(100 * gr / nrow(surveys))`%) of the surveys were conducted in grassland, and `r un` (`r round(100 * un / nrow(surveys))`%) of the surveys were conducted in unused open areas. 
 
-Because climate warming effects often differ along elevational gradients [e.g. @bertrand_2011;  @roth_2014], we split our dataset according to four elevational bands based on the temperature zonation of Switzerland [@schreiber_1977], that is colline, montane, subalpine and alpine. The distribution of plots and surveys across the elevational bands was as following: `r co_plot` plots (`r co_surv` surveys) in the colline zone, `r mo_plot` plots (`r mo_surv` surveys) in the montane zone, `r suba_plot` plots (`r suba_surv` surveys) in the subalpine zone and `r alp_plot` plots (`r alp_surv` surveys) in the alpine zone. 
+Because effects of climate warming often differ along elevational gradients [e.g. @bertrand_2011;  @roth_2014], we split our dataset according to four elevational zones based on the temperature zonation of Switzerland [@schreiber_1977], that is colline, montane, subalpine and alpine. The distribution of plots and surveys across the elevational zones was as following: `r co_plot` plots (`r co_surv` surveys) in the colline zone, `r mo_plot` plots (`r mo_surv` surveys) in the montane zone, `r suba_plot` plots (`r suba_surv` surveys) in the subalpine zone and `r alp_plot` plots (`r alp_surv` surveys) in the alpine zone. 
 
-```{r studysite, fig.cap="Distribution of the study plots accross Switzerland. Background data source: Swisstopo, Federal Office of Topography."}
+```{r studysite, fig.cap="Distribution of the study plots accross Switzerland. Only plots with land use types grassland, forest and unused open areas (in the subalpine and alpine zone) were considered. Background data source: Federal Office of Topography swisstopo."}
 include_graphics("studysite.pdf")
 ```
 
 ## Community measures {-}
-To describe the bryophyte and vascular plant communities and their change between time points we used three different measures: (1) the total number of recorded species (i.e., species richness) as a measure of community richness, (2) the temporal turnover [i.e., species exchange ratio between two points in time sensu @hillebrand_2018] to describe how many species exchanged between different time points, and (3) the temperature affinities of plant communities measures as the average @landolt_2010 temperature indicator values of recorded species [i.e., the community temperature index sensu @devictor_2008]. Similar to the Ellenberg indicator values [@ellenberg_1974], the Landolt values are ordinal numbers that express the realized ecological optima of species. They range from 1 (cryophilous species) to 5 (thermophilous species) with steps of 0.5 in between. The Landolt indicator values were developed for the specific situation in Switzerland, published the first time in @landolt_1977 and recalibrated in @landolt_2010. For bryophytes, a comparable system of indicator values has been developped by E. Urmi, published in @landolt_2010. In contrast to the Landolt indicator values for vascular plants, those of bryophytes comprise only integers between 1 and 5. If the mean temperature value of a community increases over time we speak of "termophilisation".
+To describe the bryophyte and vascular plant communities and their change between time points we used three different measures: (1) the total number of species recorded (i.e., species richness) as a measure of community richness, (2) the temporal turnover [i.e., species exchange ratio between two points in time sensu @hillebrand_2018] to describe colonisation and extinction of species between different time points, and (3) the temperature affinities of plant communities measured as the average @landolt_2010 temperature indicator values of recorded species [i.e., the community temperature index sensu @devictor_2008]. Similar to the Ellenberg indicator values [@ellenberg_1974], the Landolt values are ordinal numbers that express the realized ecological optima of species. For vascular plants, they range from 1 (cryophilous species) to 5 (thermophilous species) with steps of 0.5 in between. The Landolt indicator values were developed for the specific situation in Switzerland, published the first time in @landolt_1977 and recalibrated in @landolt_2010. For bryophytes, a comparable system of indicator values has been developed by E. Urmi, published in @landolt_2010. In contrast to the Landolt indicator values for vascular plants, those of bryophytes comprise only integers between 1 and 5. We speak of "termophilisation" if the mean temperature value of a community increases over time.
 
-To assign bryophyte species to life strategies we use the system proposed by  @during_1979 and the species' classification given by @dierssen_2002 with few edits and additions for species not covered **(Tab. xy in Suppl)**. We assembled the strategy types into two groups: fugatives, annual shuttles, colonists and ephemeral were summarized as short-lived life strategy, and long-lived shuttles, perennial stayers and dominants were grouped as long-lived life strategy.
+To assign bryophyte species to life strategies we use the system proposed by  @during_1979 and @during_1992 and the species' classification given by @dierssen_2002 with few edits and additions for species not covered. We assembled the strategy types into two groups: fugatives, annual shuttles, colonists and ephemeral were summarized as short-lived life strategy, and long-lived shuttles, perennial stayers and dominants were grouped as long-lived life strategy.
 
 ## Statistical methods and data accessibility {-}
-For each  plot, we calculated the average and the temporal trend of species richness and temperature affinity based on the repeated surveys per plot. To estimate the temporal trend, we applied for each plot separately a linear model with species richness or temperature affinity as dependent variable and the year when the survey was conducted as the predictor variable. The  estimated slope (given as change per decade) was our measure of the temporal trend of species richness and temperature affinity that we used in subsequent analyses. 
+ For each  plot, we calculated the average and the temporal trend of species richness and temperature affinity based on the repeated surveys per plot. To estimate the temporal trend, we applied for each plot separately a linear model with species richness or temperature affinity as dependent variable and the year when the survey has been conducted as the predictor variable. The  estimated slope (given as change per decade) was our measure of the temporal trend of species richness or temperature affinity, respectively, that we used in subsequent analyses. 
 
-All analyses were done with the software R [@r-core-team_2019]. To estimate the temporal turnover of species wie used the package ‘simba’ [@jurasinski_2012]. Data and R Markdown documents to fully reproduce this manuscript including figures and tables are provided at https://github.com/TobiasRoth/moss-plant-comparison. An R Markdown document is written in markdown (plain text format) and contains chunks of embedded R code to produce the figures and tables [@xie_2018]. Raw data for analyses are provided in the folder "data-raw" and the folder "R" contains the R-Script that was used to export the data from the BDM database. The folder "div" contains a list of all the R packages (including version number) that were in the workspace when the manuscript was rendered. The final version of the repository will be archived at Zenodo (https://zenodo.org/).
+All analyses were done with the software R [@r-core-team_2019]. We measured the temporal turnover as the proportion of species that differed between two time points, that is the number of species that were either only observed during first or only during the second survey at a given plot divided by the total number of species recorded during these two surveys. To estimate the temporal turnover of species we used the R package ‘simba’ [@jurasinski_2012]. Data and R Markdown documents to fully reproduce this manuscript including figures and tables are provided at https://github.com/TobiasRoth/moss-plant-comparison. An R Markdown document is written in markdown (plain text format) and contains chunks of embedded R code to produce the figures and tables [@xie_2018]. Raw data for analyses are provided in the folder "data-raw" and the folder "R" contains the R-Script that was used to export the data from the BDM database. The folder "div" contains a list of all the R packages (including version number) that were in the workspace when the manuscript was rendered. The final version of the repository will be archived at Zenodo (https://zenodo.org/).
 
 # Results {-}
 
@@ -200,10 +200,10 @@ grmod <- apply_binom_glmm("grassland")
 unmod <- apply_binom_glmm("unused")
 ```
 
-Across all surveys, `r stats$Tot_N_Spec_mo` bryophyte species and `r stats$Tot_N_Spec_pl` vascular plant species were recorded. The mean (±SD) species richness per plot was `r mean(dat$SR_mo_mean) %>% round(2)` (±`r sd(dat$SR_mo_mean) %>% round(2)`) species for bryophytes and `r mean(dat$SR_pl_mean) %>% round(2)` (±`r sd(dat$SR_pl_mean) %>% round(2)`) species for vascular plants. However, species richness was quite different between habitat types, elevational zones and species groups (Table \@ref(tab:av-community-measures)).
+Across all surveys, `r stats$Tot_N_Spec_mo` bryophyte species and `r stats$Tot_N_Spec_pl` vascular plant species were recorded. The mean (±SD) species richness per plot was `r mean(dat$SR_mo_mean) %>% round(2)` (±`r sd(dat$SR_mo_mean) %>% round(2)`) species for bryophytes and `r mean(dat$SR_pl_mean) %>% round(2)` (±`r sd(dat$SR_pl_mean) %>% round(2)`) species for vascular plants. However, species richness differed considerably between land use types, elevational zones and the two land plant lineages (Table \@ref(tab:av-community-measures)).
 For the three land use types the average species richness of vascular plants was higher than the respective species richness of bryophytes: the difference was `r out(dif_fo$estimate)` species (p-value based on a paired t-test: `r out(dif_fo$p.value, TRUE)`) in forests, `r out(dif_gr$estimate)` species (p-value: `r out(dif_gr$p.value, TRUE)`) in grasslands, and `r out(dif_un$estimate)` species (p-value: `r out(dif_un$p.value, TRUE)`) in unused open areas.
 
-In forest and grassland, where study plots spanned a large proportion of the elevational gradient, the species richness of bryophytes and vascular plants both increased from low to intermediate elevations and tent to decrease again at higher elevations (i.e., a mid-elevational peak, Fig. \@ref(fig:SR-state-elevation)). This mid-elevational peak was particularly evident for vascular plants in grassland and less obvious to absent for plants in forest and for bryophytes in both land use types. Consequently, in grassland the proportion of bryophytes (i.e., number of bryophytes divided by the total number of bryophytes and vascular plants) strongly increased with elevation (Binomial-GLMM with elevation as predictor variable and site ID as random effect; slope of elevation at the logit-scale: `r grmod[2, "estimate"]`, p-value: `r grmod[2, "p.value"]`). This increase in the proportion of bryophyte species was almost absent in forests (slope of elevation at the logit-scale: `r fomod[2, "estimate"]`, p-value: `r fomod[2, "p.value"]`).
+In forests and grassland, where study plots spanned a large proportion of the elevational gradient, the species richness of bryophytes and vascular plants both increased from low to intermediate elevations and tened to decrease again at higher elevations (i.e., a mid-elevational peak, Fig. \@ref(fig:SR-state-elevation)). This mid-elevational peak was particularly evident for vascular plants in grassland and less obvious to absent for vascular plants in forests and for bryophytes in both land use types. Consequently, in grassland the proportion of bryophytes (i.e., the number of bryophytes divided by the total number of bryophytes and vascular plants) strongly increased with elevation (Binomial-GLMM with elevation as predictor variable and site ID as random effect; slope of elevation at the logit-scale: `r grmod[2, "estimate"]`, p-value: `r grmod[2, "p.value"]`). This increase in the proportion of bryophyte species was almost absent in forests (slope of elevation at the logit-scale: `r fomod[2, "estimate"]`, p-value: `r fomod[2, "p.value"]`).
 
 ```{r SR-state-elevation, fig.cap = "Mean species richness of bryophytes (orange) and vascular plants (green) along the elevational gradient. Shown are the patterns for plots in (A) forests and (B) grassland. The land use type of plots was classified according to the first survey to each plot. Each point represents the mean number of recorded species of all surveys at one study plot. The lines represent the regression of species richness on elevation (with linear and quadratic polynomials) with grey areas indicating the corresponding 95%-credible intervals."}
 
@@ -221,7 +221,7 @@ forest <-
   ylim(0, 80) +
   xlim(250, 2750) +
   labs(
-    x = "Elevation (m)",
+    x = "Elevation (m a.s.l.)",
     y = "Mean species richness",
     title = "(A) Forests")
 
@@ -239,7 +239,7 @@ grassland <-
   ylim(0, 80) +
   xlim(250, 2750) +
   labs(
-    x = "Elevation (m)",
+    x = "Elevation (m a.s.l.)",
     y = "Mean species richness",
     title = "(B) Grassland")
 
@@ -259,7 +259,115 @@ apply_ttest <- function(land_use_type, plants) {
 }
 ```
 
-In forest, the temporal trend of species richness between 2001 and 2018 was in favour of bryophytes: while for bryophytes the species richness increased by `r apply_ttest("forest", FALSE)` per decade, the species richness of vascular plants decreased on the same plots and period by `r apply_ttest("forest", TRUE)`. In contrast, however, the temporal trend in species richness in grassland and unused open areas was in favour of vascular plants. In grassland the species richness decreased in bryophytes by `r apply_ttest("grassland", FALSE)` and increase in vascular plants by `r apply_ttest("grassland", TRUE)`. Also in unused open areas, the increase in  species richness was less strong in  bryophytes than in vascular plants, with an increas of `r apply_ttest("unused", FALSE)` in the former and an increase of `r apply_ttest("unused", TRUE)` in the latter. 
+In forests, the temporal trend of species richness between 2001 and 2018 was in favour of bryophytes (Fig. \@ref(fig:SR-trend-HS)): while for bryophytes the species richness increased by `r apply_ttest("forest", FALSE)` per decade, the species richness of vascular plants decreased on the same plots and period by `r apply_ttest("forest", TRUE)`. In contrast, however, the temporal trend in species richness in grassland and unused open areas was in favour of vascular plants, which was particularly the case at the alpine zone (Fig. \@ref(fig:SR-trend-HS)). In grassland the species richness decreased in bryophytes by `r apply_ttest("grassland", FALSE)` and increased in vascular plants by `r apply_ttest("grassland", TRUE)`. Also in unused open areas, the increase in  species richness was less strong in  bryophytes than in vascular plants, with an increase of `r apply_ttest("unused", FALSE)` in the former and an increase of `r apply_ttest("unused", TRUE)` in the latter. 
+
+```{r SR-trend-HS, fig.cap = "Temporal trend in species richness between 2001 and 2018 of bryophytes (orange) and vascular plants (green) for plots that were (A) forests, (B) grassland and (C) unused open areas according to the first survey. Given are mean (points) and corresponding 95%-credible itervals (lines)."}
+
+# Plot: temporal change across HS for forest plots
+forest <-
+  dat %>% 
+  filter(land_use == "forest") %>% 
+  filter(HS != "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(SR_pl_trend, na.rm = TRUE),
+    lo = t.test(SR_pl_trend)$conf.int[1],
+    up = t.test(SR_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "forest") %>% 
+      filter(HS != "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(SR_mo_trend, na.rm = TRUE),
+        lo = t.test(SR_mo_trend)$conf.int[1],
+        up = t.test(SR_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(-3, 6.5) +
+  labs(
+    x = "",
+    y = "Temporal trend in species richness per decade",
+    title = "(A) Forests") +
+  scale_x_discrete(
+    limits = c("colline", "montane", "subalpine"),
+    labels = c("colline", "montane", "sub-\nalpine"))
+
+# Plot: temporal change across HS for grassland plots
+grassland <-
+  dat %>% 
+  filter(land_use == "grassland") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(SR_pl_trend, na.rm = TRUE),
+    lo = t.test(SR_pl_trend)$conf.int[1],
+    up = t.test(SR_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "grassland") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(SR_mo_trend, na.rm = TRUE),
+        lo = t.test(SR_mo_trend)$conf.int[1],
+        up = t.test(SR_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(-3, 6.5) +
+  labs(
+    x = "",
+    y = "Temporal trend in species richness per decade",
+    title = "(B) Grassland")  +
+  scale_x_discrete(
+    limits = c("colline", "montane", "subalpine", "alpine"),
+    labels = c("colline", "montane", "sub-\nalpine", "alpine"))
+
+# Plot: temporal change across HS for unused plots
+unused <-
+  dat %>% 
+  filter(land_use == "unused") %>% 
+  filter(HS == "subalpine" | HS == "alpine") %>% 
+  group_by(HS) %>% 
+  dplyr::summarise(
+    mean = mean(SR_pl_trend, na.rm = TRUE),
+    lo = t.test(SR_pl_trend)$conf.int[1],
+    up = t.test(SR_pl_trend)$conf.int[2],
+    gr = "plants") %>% 
+  rbind(
+    dat %>% 
+      filter(land_use == "unused") %>% 
+      filter(HS == "subalpine" | HS == "alpine") %>% 
+      group_by(HS) %>% 
+      dplyr::summarise(
+        mean = mean(SR_mo_trend, na.rm = TRUE),
+        lo = t.test(SR_mo_trend)$conf.int[1],
+        up = t.test(SR_mo_trend)$conf.int[2],
+        gr = "moss")) %>% 
+  ggplot(aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
+  geom_abline(slope = 0, intercept = 0, lty = 2) +
+  geom_point(position = position_dodge(width = 0.25)) +
+  geom_errorbar(width = 0.2, position = position_dodge(width = 0.25)) +
+  scale_color_manual(values = c("#FF7F00", "#4DAF4A")) +
+  ylim(-3, 6.5) +
+  labs(
+    x = "",
+    y = "Temporal trend in species richness per decade",
+    title = "(C) Unused open areas") +
+  scale_x_discrete(
+    limits = c("subalpine", "alpine"),
+    labels = c("sub-\nalpine", "alpine"))
+
+multiplot(forest, grassland, unused, cols = 3)
+```
 
 ## Temporal turnover {-}
 
@@ -278,10 +386,10 @@ respl <- c(
   out(mod["land_use:ele", "Pr(>F)"], TRUE))
 ```
 
-The mean temporal turnover across all sites was larger for bryophytes than for vascular plants (mean ± SD for bryophytes: `r out(mean(dat$TU_mo, na.rm = TRUE))` ± `r out(sd(dat$TU_mo, na.rm = TRUE))`; vascular plants:  `r out(mean(dat$TU_pl, na.rm = TRUE))` ± `r out(sd(dat$TU_pl, na.rm = TRUE))`; p-value based on Wilcoxon signed rank test: `r overalldiff`). The pattern how the temporal turnover of bryophytes changed along the elevational gradient differed between land-use types (Ancova with an interaction between land use types and elevation; F-value: `r resmo[1]`; p-value: `r resmo[2]`): while it decreased with elevation in forests, it tended to increase in grassland (Fig. \@ref(fig:TU-state-elevation)). For vascular plants in contrast, the temporal turn-over decreased from low to high elevations both in forests and in grassland with only slight differences between the two land-use types (Ancova with an interaction between land use types and elevation; F-value: `r respl[1]`; p-value: `r respl[2]`; Fig. \@ref(fig:TU-state-elevation)).
+The mean temporal turnover across all sites was higher for bryophytes than for vascular plants (mean ± SD for bryophytes: `r out(mean(dat$TU_mo, na.rm = TRUE))` ± `r out(sd(dat$TU_mo, na.rm = TRUE))`; vascular plants:  `r out(mean(dat$TU_pl, na.rm = TRUE))` ± `r out(sd(dat$TU_pl, na.rm = TRUE))`; p-value based on Wilcoxon signed rank test: `r overalldiff`). The pattern how the temporal turnover of bryophytes changed along the elevational gradient differed between land use types (Ancova with an interaction between land use types and elevation; F-value: `r resmo[1]`; p-value: `r resmo[2]`): while it decreased with elevation in forests, it tended to increase in grassland (Fig. \@ref(fig:TU-state-elevation)). For vascular plants in contrast, the temporal turnover decreased from low to high elevations both in forests and in grassland with only slight differences between the two land use types (Ancova with an interaction between land use types and elevation; F-value: `r respl[1]`; p-value: `r respl[2]`; Fig. \@ref(fig:TU-state-elevation)).
 
 
-```{r TU-state-elevation, fig.cap = "Temporal turnover of bryophytes (orange) and vascular plants (green) along the elevational gradient for plots that were (A) forests and (B) grassland according to the first survey to each plot. Each point represents the proportional difference in the species lists of the surveys at one study plot. The lines represent the regression of temporal turnover on elevation (linear trend) with grey areas indicating the corresponding 95%-credible intervals."}
+```{r TU-state-elevation, fig.cap = "Temporal turnover of bryophytes (orange) and vascular plants (green) along the elevational gradient for plots that were (A) forests and (B) grassland according to the first survey. Each point represents the proportional difference in the species lists of the surveys at one study plot. The lines represent the regression of temporal turnover on elevation (linear trend) with grey areas indicating the corresponding 95%-credible intervals."}
 
 # Plot: elevational gradient in temporal turnover for forest plots
 forest <-
@@ -297,7 +405,7 @@ forest <-
   ylim(0, 1) +
   xlim(250, 3100) +
   labs(
-    x = "Elevation (m)",
+    x = "Elevation (m a.s.l.)",
     y = "Temporal turnover\n(proportional change in species lists)",
     title = "(A) Forests"
   )
@@ -316,7 +424,7 @@ grassland <-
   ylim(0, 1) +
   xlim(250, 3100) +
   labs(
-    x = "Elevation (m)",
+    x = "Elevation (m a.s.l.)",
     y = "Temporal turnover\n(proportional change in species lists)",
     title = "(B) Grassland"
   )
@@ -344,9 +452,9 @@ mod <- lm(diff ~ ele, data = d %>% filter(land_use == "grassland")) %>% summary
 mod <- lm(diff ~ ele, data = d %>% filter(land_use == "unused")) %>% summary
 ```
 
-While in forests the mean temperature value (i. e.,  temperature affinity) of vascular plants was higher than the mean temperature value of bryophytes, the oposite was the case for grassland and unused open areas: the difference in temperature affinity of vascular plants minus the temperature affinity of bryophytes was `r out(dif_fo$estimate)` (p-value based on a paired t-test: `r out(dif_fo$p.value, TRUE)`) in forests, `r out(dif_gr$estimate)` (p-value: `r out(dif_gr$p.value, TRUE)`) in grassland, and `r out(dif_un$estimate)` (p-value: `r out(dif_un$p.value, TRUE)`) in unused open areas. In grassland, bryophyte communities had slightly higher temperature affinities along the entire gradient (Fig. \@ref(fig:T-state-elevation)). In forests, however, at low elevation the temperature affinities of vascular plant communities were higher than the temperature affinities of bryophyte communities whearas at higher elevations the pattern was inversed (Fig. \@ref(fig:T-state-elevation)).
+While in forests the mean temperature value of vascular plants was higher than that of bryophytes, the opposite was the case for grassland and unused open areas. The difference in temperature affinity of vascular plants minus the temperature affinity of bryophytes was `r out(dif_fo$estimate)` (p-value based on a paired t-test: `r out(dif_fo$p.value, TRUE)`) in forests, `r out(dif_gr$estimate)` (p-value: `r out(dif_gr$p.value, TRUE)`) in grassland, and `r out(dif_un$estimate)` (p-value: `r out(dif_un$p.value, TRUE)`) in unused open areas. In grassland, bryophyte communities had slightly higher temperature affinities along the entire gradient (Fig. \@ref(fig:T-state-elevation)). In forests, however, at low elevation the temperature affinities of vascular plant communities were higher than the temperature affinities of bryophyte communities whearas at higher elevations the pattern was inversed (Fig. \@ref(fig:T-state-elevation)).
 
-```{r T-state-elevation, fig.cap = "Mean temperature values along the elevational gradient for plots that were (A) forests and (B) grassland according to the first survey to each plot. Given are mean temperature values of recorded vascular plants (green) and bryophytes (orange).  The lines represent the regression of temperature values on elevation (with linear and quadratic polynomials) with grey areas indicating the corresponding 95%-credible intervals."}
+```{r T-state-elevation, fig.cap = "Mean temperature values along the elevational gradient for plots that were (A) forests and (B) grassland according to the first survey. Given are mean temperature values of recorded vascular plants (green) and bryophytes (orange). The lines represent the regression of temperature values on elevation (with linear and quadratic polynomials) with grey areas indicating the corresponding 95%-credible intervals."}
 
 # Plot: elevational gradient in T-values for forest plots
 forest <-
@@ -362,7 +470,7 @@ forest <-
   ylim(1,5) + 
   xlim(250, 3100) +
   labs(
-    x = "Elevation (m)",
+    x = "Elevation (m a.s.l.)",
     y = "Mean temperature value",
     title = "(A) Forests"
   )
@@ -381,7 +489,7 @@ grassland <-
   ylim(1,5) + 
   xlim(250, 3100) +
   labs(
-    x = "Elevation (m)",
+    x = "Elevation (m a.s.l.)",
     y = "Mean temperature value",
     title = "(B) Grassland"
   )
@@ -406,10 +514,10 @@ un_pl <- apply_ttest("unused", TRUE)
 un_mo <- apply_ttest("unused", FALSE)
 ```
 
-Between 2001 and 2018, for both bryophyte and plant communities the average temperature value of recoreded species increased over time, that is termophilisation of species communities. Termophilisation was evident in all three land use types with a slightly stronger but at the same time more variable termophilisation in bryophytes: in forest the avearge termophilisation was `r out(fo_mo$estimate, digits = 3)` (p-value based on a one sample t-test to test for no termophilisation: `r out(fo_mo$p.value, TRUE)`) for bryophytes and `r out(fo_pl$estimate, digits = 3)` (p-value: `r out(fo_pl$p.value, TRUE)`) for vascular plants, in grassland the avearge termophilisation was `r out(gr_mo$estimate, digits = 3)` (p-value: `r out(gr_mo$p.value, TRUE)`) for bryophytes and `r out(gr_pl$estimate, digits = 3)` (p-value: `r out(gr_pl$p.value, TRUE)`) for vascular plants, and in unused open areas the avearge termophilisation was `r out(un_mo$estimate, digits = 3)` (p-value: `r out(un_mo$p.value, TRUE)`) for bryophytes and `r out(un_pl$estimate, digits = 3)` (p-value: `r out(un_pl$p.value, TRUE)`) for vascular plants. This tendency for higher but more variable termophilisation in bryophytes communities compared to vascular plant communities was  evident for all three land use types at the entire elevational gradient (Fig. \@ref(fig:T-trend-HS)).
+Between 2001 and 2018, for both bryophyte and vascular plant communities the mean temperature value of recoreded species increased over time, indicating termophilisation of species communities. Termophilisation was evident in all three land use types with a slightly stronger but at the same time more variable termophilisation in bryophytes: in forests the average termophilisation was `r out(fo_mo$estimate, digits = 3)` (p-value based on a one sample t-test to test for no termophilisation: `r out(fo_mo$p.value, TRUE)`) for bryophytes and `r out(fo_pl$estimate, digits = 3)` (p-value: `r out(fo_pl$p.value, TRUE)`) for vascular plants, in grassland the average termophilisation was `r out(gr_mo$estimate, digits = 3)` (p-value: `r out(gr_mo$p.value, TRUE)`) for bryophytes and `r out(gr_pl$estimate, digits = 3)` (p-value: `r out(gr_pl$p.value, TRUE)`) for vascular plants, and in unused open areas the average termophilisation was `r out(un_mo$estimate, digits = 3)` (p-value: `r out(un_mo$p.value, TRUE)`) for bryophytes and `r out(un_pl$estimate, digits = 3)` (p-value: `r out(un_pl$p.value, TRUE)`) for vascular plants. This tendency for higher but more variable termophilisation in bryophyte communities compared to vascular plant communities was evident for all three land use types at the entire elevational gradient (Fig. \@ref(fig:T-trend-HS)).
 
 
-```{r T-trend-HS, fig.cap = "Termophilisation between 2001 and 2018 of bryophytes (orange) and vascular plants (green) for plots that were (A) forests, (B) grassland and (C) unused open areas according to the first survey to each plot. Given are mean (points) and corresponding 95%-credible itervals (lines)."}
+```{r T-trend-HS, fig.cap = "Termophilisation between 2001 and 2018 of bryophytes (orange) and vascular plants (green) for plots that were (A) forests, (B) grassland and (C) unused open areas according to the first survey. Given are mean (points) and corresponding 95%-credible itervals (lines)."}
 
 # Plot: temporal change across HS for forest plots
 forest <-
@@ -509,7 +617,7 @@ unused <-
   labs(
     x = "",
     y = "Thermophilisation\n (temporal trend in T values per decade)",
-    title = "(C) Unused") +
+    title = "(C) Unused open areas") +
   scale_x_discrete(
     limits = c("subalpine", "alpine"),
     labels = c("sub-\nalpine", "alpine"))
@@ -521,9 +629,9 @@ multiplot(forest, grassland, unused, cols = 3)
 diff <- t.test(dat$T_mo_sh_trend, dat$T_mo_lo_trend, paired = TRUE)
 ```
 
-Species with a short-lived life strategy are among those that colonize new habitats more rapidly, and thus conbtribute more to thermophilisation of species communities. Temporal trends in the change of temperature values were higher for short-lived bryophyte species than for bryophytes with a long-lived life strategy: the difference in termophilisation of short-lived and long-lived species was `r out(diff$estimate)` (p-value based on a paired t-test to test for no differences between short-lived and long-lived species: `r out(diff$p.value, TRUE)`). The difference between short-lived and long-lived specieswas more pronounced at higher elevations (Fig. \@ref(fig:T-trend-life-strategy)). However, there might be a slight bias as short-lived species tend to be more cryophilous (37% of all short-lived species have a T-value of 1 or 2) than long-lived species (only 30% have a T-value of 1 or 2). With increasing elevation, the proportion of short-lived species in bryophyte communities is increasing, except for grassland, with a peak in lowlands (mainly due to communities that consist of short-lived species only, presumably in disturbed habitats).
+Species with a short-lived life strategy are among those that colonise new habitats more rapidly, and thus are expected to conbtribute more to thermophilisation of species communities. Temporal trends in the change of temperature values were higher for short-lived bryophyte species than for bryophytes with a long-lived life strategy: the difference in termophilisation of the part of species communities with short-lived and long-lived species, respectively, was `r out(diff$estimate)` (p-value based on a paired t-test to test for no differences between short-lived and long-lived species: `r out(diff$p.value, TRUE)`). This difference between short-lived and long-lived species was more pronounced at higher elevations (Fig. \@ref(fig:T-trend-life-strategy)). However, there might be a slight bias as short-lived species tend to be more cryophilous (37% of all short-lived species have a T-value of 1 or 2) than long-lived species (only 30% have a T-value of 1 or 2). With increasing elevation, the proportion of short-lived species in bryophyte communities is increasing, except for grassland, with a peak in lowlands (mainly due to communities that consist of short-lived species only, presumably in disturbed habitats).
 
-```{r T-trend-life-strategy, fig.cap = "Termophilisation between 2001 and 2018 of short-lived species (magenta) and long-lived species (cyan) in bryophyte communities in different elevational zones"}
+```{r T-trend-life-strategy, fig.cap = "Termophilisation between 2001 and 2018 of short-lived species (magenta) and long-lived species (cyan) in bryophyte communities in different elevational zones."}
 #short-lived species
 d.res_sh <- dat %>% 
   group_by(HS) %>% 
@@ -560,16 +668,18 @@ ggplot(d.res, aes(y = mean, x = HS, col = gr, ymin = lo, ymax = up)) +
 
 # Discussion {-}
 
-Climate warming is one of the major globale change impacts within the study region with an increase in ambient temperature  of > 0.5 K per decade since the late 1980' [@ch2018_2018; @meteoswiss_2019]. At least part of the changes in community structure of bryophytes and vascular plants that we report in this study is likely related to this temperature increase. In general, both bryophyte and vascular plant communities show termophilisation, that is the replacement of more cold-dwelling with more warm-dwelling species. However, in eight of the nine comparisons in Fig. \@ref(fig:T-trend-HS) the termophilisation was higher in bryophytes than in vascular plants. If over a long period of time the termophilisation of bryophytes was indeed larger than the termophilisation of vascular plants, we would expect that the average temperature values (i.e., temperature affinities)  of extent bryophyte communities to be larger than the average temperature value of vascular plant communities. This prediction matches particularly well with the temperature affinities of plant communities we found in grasslands (Fig. \@ref(fig:T-state-elevation)): the temperature affinities of bryophytes were slightly higher than the temperature affinities of plants along the entire elevational gradient. Although the uncertainty in termophilisation particularly in bryophytes was rather high, we thus conclude that bryophyte communities were faster than vascular plant communities in adapting to current climate warming.
+Climate warming is a major globale change impact within the study region with an increase in ambient temperature  of > 0.5 K per decade since the late 1980' [@ch2018_2018; @meteoswiss_2019]. At least part of the changes in community structure of bryophytes and vascular plants that we report in this study is likely to be related to this temperature increase. In general, both bryophyte and vascular plant communities show termophilisation, that is the replacement of more cold-dwelling with more warm-dwelling species. However, in eight of the nine comparisons in Fig. \@ref(fig:T-trend-HS) the termophilisation was higher in bryophytes than in vascular plants. This is in accordance with the higher temporal turnover of bryophyte communities we found in this study (Fig. \@ref(fig:TU-state-elevation). If for bryophyte communities species replacement towards more thermophilous species was higher, in the long run, than for vascular plants, we would expect the average temperature value (i.e., temperature affinity) of extant bryophyte communities to be higher than the average temperature value of vascular plant communities. This prediction matches particularly well with the temperature affinities of plant communities we found in grassland (Fig. \@ref(fig:T-state-elevation)): the temperature affinities of bryophytes were slightly higher than the temperature affinities of plants along the entire elevational gradient. Although the uncertainty in termophilisation particularly in bryophytes was rather high, we thus conclude that bryophyte communities were faster than vascular plant communities in adapting to current climate warming.
 
-The higher termophilisation rate in bryophytes compared to vascular plants might be due to higher colonization rates of warm dwelling species and/or lower extinction rates of cold-dwelling species. We suggest that ecophysiological and biological differences between the two taxonomical groups could explain higher colonization rates of bryophytes as pointed out in the introduction; i.e., pokilohydry of bryophytes and different life strategies. Many bryophyte species have a colonist strategy with short generation times and high reproductive effort [@during_1979; @during_1992; @dierssen_2002], which facilitates them to colonize sites that become suitable trough climate warming. By contrast and particularly in mountain areas, vascular plant species are mostly long-lived species and form persistent communities which have high resilience to vascular plant invasion [@dullinger_2004; @mark_2005; @grabherr_2010; @gottfried_2012]. Beside resilience, range shifts of vascular plants towards higher elevations depend on the availability of soil. The desiccation tolerance and nutrient uptake mechanisms of bryophytes, however, make them much less dependent on a substrate that serves as water storage and source of nutrients [@proctor_2009]. Finally, vascular plant growth and expansion at high elevations is slowed down by low temperatures, short vegetation periods and positive net photosynthesis being mostly limited to the summer season [@korner_2003; @gottfried_2012]. Bryophytes can maintain positive net photosynthesis rates at very low temperatures [e.g., down to -10 °C  in *Pellia epiphylla*, a common liverwort in the study region; @pihakaski_1979] and are opportunistic in their assimilation strategy. Once environmental conditions are favorable they can reassume positive net photosynthesis within short (often within minutes) time intervals throughout the year [@proctor_2009; @proctor_2011].
+The higher termophilisation rate in bryophytes compared to vascular plants might be due to higher colonisation rates of warm-dwelling species and/or higher extinction rates of cold-dwelling species. We suggest that ecophysiological and biological differences between the two taxonomical groups could explain higher colonization rates of bryophytes as pointed out in the introduction; i.e., pokilohydry of bryophytes and different life strategies. Many bryophyte species have a colonist strategy with short generation time and high reproductive effort [@during_1979; @during_1992; @dierssen_2002], which facilitates them -- together with higher dispersal capacities than vascular plants -- to colonize sites that become suitable through climate warming. By contrast and particularly in mountainous areas, vascular plant species are mostly long-lived species and form persistent communities which have high resilience to vascular plant invasion [@dullinger_2004; @mark_2005; @grabherr_2010; @gottfried_2012]. Beside resilience, range shifts of vascular plants towards higher elevations depend on the availability of soil. The desiccation tolerance and nutrient uptake mechanisms of bryophytes, however, make them much less dependent on a substrate that serves as water storage and source of nutrients [@proctor_2009]. Finally, vascular plant growth and expansion at high elevations is slowed down by low temperatures, short vegetation periods and positive net photosynthesis being mostly limited to the summer season [@korner_2003; @gottfried_2012]. Bryophytes can maintain positive net photosynthesis rates at very low temperatures [e.g., down to -10 °C  in *Pellia epiphylla*, a common liverwort in the study region; @pihakaski_1979] and are opportunistic in their assimilation strategy. Once environmental conditions are favorable they can reassume positive net photosynthesis within short (often within minutes) time intervals throughout the year [@proctor_2009; @proctor_2011].
 
-Higher termophilisation rates of bryophytes might also be due to higher extinction rates of cold-dwelling bryophyte species  as compared to cold-dwelling vascular plant species. Many high mountain bryophyte species typically grow in the coldest microsites (e.g., in gaps between rocks on northern slopes) and another set of species depends on long snow cover (Limpricht 1890, 1895, 1904, Amann 1928, Köckinger 2017). These species may not find suitable refugia at the same elevational level, and, in the European Alps they include endemics known from a few localities only (e.g., (Hallingbäck et al. 2019, Schröck et al. 2019a, 2019b).
-For vascular plants, our results expand findings of (Rumpf et al. 2018) to the community level. (Rumpf et al. 2018) examined range shifts of 183 plant species in the Alps using data from vegetation relevés located mostly between 1500 and 2700 m, thus, roughly encompassing the subalpine and alpine zone in our study and observed decreased range shifts at higher elevations. The more delayed responses among alpine vascular plants is supported by the decreasing temporal turnover rate of plants in grasslands (Fig. \@ref(fig:TU-state-elevation)) and by crowing evidence that the extinction of mountain top species may be delayed by their survival in colder microsite refugia [e.g. @scherrer_2011; @maclean_2015; @giezendanner_2019].
+Higher termophilisation rates of bryophytes might also be due to higher extinction rates of cold-dwelling bryophyte species  as compared to cold-dwelling vascular plant species. Many high mountain bryophyte species typically grow in the coldest microsites (e.g., in gaps between rocks on northern slopes) and another set of species depends on long snow cover [@limpricht_1890; @limpricht_1895; @amann_1928; @kockinger_2017]. These species may not find suitable refugia at the same elevational level, and, in the European Alps they include endemics known from a few localities only [e.g @hallingback_2019;  @schrock_2019; @schrock_2019b]. They are especially threatened by climate warming [@kohler_2014; @he_2016].
 
-Bryophytes are usually more diverse in the harsh alpine environments [@bruun_2006; @proctor_2011; @turetsky_2012; @mateo_2016]. Indeed, in grassland we found that the proportion of bryophytes  among recorded plants strongly increased along the elevational gradient. If we assume that climate warming in general leads to a  less harsh environments, which might be the case in areas such as Switzerland where severe droughts are rare,  we would expect that the proportion of bryophytes among recorded plants would increase over time. This is what we  found for grassland where the species richness of bryophytes tent to decrease and the species richness of plants increased between 2001 and 2018. While it is often suggested that communities that are faster in tracking climate warming are better able to cope with climate change (which would favor bryophytes in our case), overall species richness changed in favor of vascular plants, suggesting that in sum more vascular plants than bryophytes profited from climate warming. 
+For vascular plants, our results expand findings of @rumpf_2018 at the community level. They examined range shifts of 183 vascular plant species in the Alps using data from vegetation releves located mostly between 1500 and 2700 m a.s.l., thus, roughly encompassing the subalpine and alpine zone in our study. They observed decreased range size at higher elevations. The more delayed responses among alpine vascular plants is supported by the decreasing temporal turnover rate of vascular plants in grassland (Fig. \@ref(fig:TU-state-elevation)) and by growing evidence that the extinction of mountain top species may be delayed by their survival in colder microsite refugia [e.g. @scherrer_2011; @maclean_2015; @giezendanner_2019].
 
-However, we like to acknowledge that it is an inherent problem of observational studies such as our to ascertain the drivers of observed patterns. However, climate warming is one of the major impacts the study region experienced in the last decades. Since the late 1980' warming increased to rates > 0.5 K per decade [@ch2018_2018; @meteoswiss_2019]. By contrast, minor changes in precipitation regimes were observed [@ch2018_2018].  Nonetheless, we cannot exclude that other factors than temperature have influenced our results to a certain degree. For instance, nutrient enrichment, an immanent element of global- and local change in the study region [@schlesinger_2009; @roth_2013], and warming may have additive effects [@zhang_2015; @greaver_2016].
+Bryophytes are usually more diverse in the harsh alpine environments [@bruun_2006; @proctor_2011; @turetsky_2012; @mateo_2016]. Indeed, in grassland we found that the proportion of bryophytes  among recorded plants strongly increased along the elevational gradient. If we assume that climate warming in general leads to a  less harsh environments, which might be the case in regions such as Switzerland where severe droughts are rare,  we would expect that the proportion of bryophytes among recorded plants would increase over time. This is what we  found for grassland where the species richness of bryophytes tent to decrease and the species richness of vascular plants increased between 2001 and 2018. While it is often suggested that communities that are faster in tracking climate warming are better able to cope with climate change (which would favour bryophytes in our case), overall species richness changed in favour of vascular plants, suggesting that in sum more vascular plants than bryophytes profited from climate warming. 
+
+
+However, we like to acknowledge that it is an inherent problem of observational studies such as our to ascertain the drivers of observed patterns. At a regional scale, climate warming is one of the major changes the study region experienced in the last decades. Since the late 1980' warming increased to rates > 0.5 K per decade [@ch2018_2018; @meteoswiss_2019]. By contrast, minor changes in precipitation regimes were observed [@ch2018_2018].  Nonetheless, we cannot exclude that other factors than temperature such as for example the change in land-use intensity have influenced our results to a certain degree. For instance, nutrient enrichment, an immanent element of global and local change in the study region [@schlesinger_2009; @roth_2013], and warming may have additive effects [@zhang_2015; @greaver_2016].
 
 So far, most observational studies addressing climate warming effects encompassed time intervals > 20 years and often considerably uncertainty had to be accepted because accurate relocation of historical surveys was not possible [see @chen_2011; @wiens_2016; @maclean_2017; @freeman_2018; @rumpf_2018]. Consequently, analyses could not address impacts on resident communities and mostly focused on range shifts of common species, because a minimum number of records is required to estimate ranges. Here, we can supplement research on climate warming effects with results based on an extensive dataset from exactly relocated plots monitored for 10 to 15. We believe that our study is an example on how real-time monitoring data using standardized schemes could allow for a better understanding of how climate change influence biodiversity [@martin_2019; @henry_2008].
 
